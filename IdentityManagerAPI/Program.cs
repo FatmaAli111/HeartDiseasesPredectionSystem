@@ -15,9 +15,12 @@ using Microsoft.Extensions.FileProviders;
 using IdentityManagerAPI.Middlewares;
 using IdentityManager.Services.ControllerService.IControllerService;
 using IdentityManager.Services.ControllerService;
+using Models.DTOs.EmailSender;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//AddEmailSender
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 
 // Add services to the container.
