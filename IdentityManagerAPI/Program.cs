@@ -16,11 +16,17 @@ using IdentityManagerAPI.Middlewares;
 using IdentityManager.Services.ControllerService.IControllerService;
 using IdentityManager.Services.ControllerService;
 using Models.DTOs.EmailSender;
+using Models.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //AddEmailSender
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
+//ChatBot
+var openAiKey = builder.Configuration["OpenAIKey"];
+builder.Services.AddHttpClient();
+builder.Services.Configure<OpenAISettings>(builder.Configuration.GetSection("OpenApi"));
 
 
 // Add services to the container.
