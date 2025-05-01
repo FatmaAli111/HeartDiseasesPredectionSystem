@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DataAcess.Migrations
 {
     /// <inheritdoc />
-    public partial class secondly1 : Migration
+    public partial class fatma : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -76,6 +76,21 @@ namespace DataAcess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "messages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SenderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ReceiverId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SentAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_messages", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "patients",
                 columns: table => new
                 {
@@ -91,6 +106,19 @@ namespace DataAcess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_patients", x => x.PatientId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -347,7 +375,7 @@ namespace DataAcess.Migrations
                         column: x => x.DiagnosisId,
                         principalTable: "diagnosis",
                         principalColumn: "DiagnosisId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -360,7 +388,8 @@ namespace DataAcess.Migrations
                     ReadingId = table.Column<int>(type: "int", nullable: false),
                     ProgressNotes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DoctorId = table.Column<int>(type: "int", nullable: false)
+                    DoctorId = table.Column<int>(type: "int", nullable: false),
+                    WearableReadingReadingId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -376,10 +405,16 @@ namespace DataAcess.Migrations
                         column: x => x.PatientId,
                         principalTable: "patients",
                         principalColumn: "PatientId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_progressTracking_wearableReadings_ReadingId",
                         column: x => x.ReadingId,
+                        principalTable: "wearableReadings",
+                        principalColumn: "ReadingId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_progressTracking_wearableReadings_WearableReadingReadingId",
+                        column: x => x.WearableReadingReadingId,
                         principalTable: "wearableReadings",
                         principalColumn: "ReadingId");
                 });
@@ -470,6 +505,11 @@ namespace DataAcess.Migrations
                 column: "ReadingId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_progressTracking_WearableReadingReadingId",
+                table: "progressTracking",
+                column: "WearableReadingReadingId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_recommendations_DiagnosisId",
                 table: "recommendations",
                 column: "DiagnosisId");
@@ -507,6 +547,9 @@ namespace DataAcess.Migrations
                 name: "MedicalHistory");
 
             migrationBuilder.DropTable(
+                name: "messages");
+
+            migrationBuilder.DropTable(
                 name: "patientMedications");
 
             migrationBuilder.DropTable(
@@ -514,6 +557,9 @@ namespace DataAcess.Migrations
 
             migrationBuilder.DropTable(
                 name: "recommendations");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

@@ -402,6 +402,30 @@ namespace DataAcess.Migrations
                     b.ToTable("Medications");
                 });
 
+            modelBuilder.Entity("Models.Domain.Message", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ReceiverId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("messages");
+                });
+
             modelBuilder.Entity("Models.Domain.Patient", b =>
                 {
                     b.Property<int>("PatientId")
@@ -481,6 +505,9 @@ namespace DataAcess.Migrations
                     b.Property<int>("ReadingId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("WearableReadingReadingId")
+                        .HasColumnType("int");
+
                     b.HasKey("ProgressId");
 
                     b.HasIndex("DoctorId");
@@ -488,6 +515,8 @@ namespace DataAcess.Migrations
                     b.HasIndex("PatientId");
 
                     b.HasIndex("ReadingId");
+
+                    b.HasIndex("WearableReadingReadingId");
 
                     b.ToTable("progressTracking");
                 });
@@ -521,6 +550,25 @@ namespace DataAcess.Migrations
                     b.HasIndex("DoctorId");
 
                     b.ToTable("recommendations");
+                });
+
+            modelBuilder.Entity("Models.Domain.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Models.Domain.WearableReading", b =>
@@ -559,12 +607,34 @@ namespace DataAcess.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("ImageId")
                         .HasColumnType("int");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Specialty")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("YearsOfExperience")
+                        .HasColumnType("int");
 
                     b.HasIndex("ImageId");
 
@@ -678,10 +748,14 @@ namespace DataAcess.Migrations
                         .IsRequired();
 
                     b.HasOne("Models.Domain.WearableReading", "WearableReading")
-                        .WithMany("ProgressTrackings")
+                        .WithMany()
                         .HasForeignKey("ReadingId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Models.Domain.WearableReading", null)
+                        .WithMany("ProgressTrackings")
+                        .HasForeignKey("WearableReadingReadingId");
 
                     b.Navigation("Doctor");
 

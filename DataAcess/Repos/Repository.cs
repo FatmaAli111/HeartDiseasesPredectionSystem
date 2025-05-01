@@ -23,6 +23,7 @@ namespace DataAcess.Repos
         public async Task AddAsync(T entity)
         {
             await DbSet.AddAsync(entity);
+            await _db.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(T entity)
@@ -78,5 +79,7 @@ namespace DataAcess.Repos
 
             return await query.ToListAsync();
         }
+
+      
     }
 }

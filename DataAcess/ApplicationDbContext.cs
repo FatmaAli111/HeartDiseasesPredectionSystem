@@ -24,6 +24,8 @@ namespace DataAcess
         public DbSet<ProgressTracking> progressTracking { get; set; }
         public DbSet<Recommendation> recommendations { get; set; }
         public DbSet<WearableReading> wearableReadings { get; set; }
+        public DbSet<Message> messages { get; set; }
+        public DbSet<User> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -32,6 +34,15 @@ namespace DataAcess
             builder.ApplyConfiguration(new RoleConfiguration());
             builder.Entity<PatientMedication>()
     .HasKey(pm => new { pm.PatientId, pm.MedicationId }); // تحديد المفتاح المركب
+        
+            builder.Entity<ProgressTracking>()
+                .HasOne(pt=>pt.WearableReading).WithMany()
+                .HasForeignKey(wr=>wr.ReadingId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            // أو .SetNull
+
 
         }
 

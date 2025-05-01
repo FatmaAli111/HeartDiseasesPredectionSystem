@@ -1,4 +1,4 @@
-using DataAcess;
+﻿using DataAcess;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -17,6 +17,8 @@ using IdentityManager.Services.ControllerService.IControllerService;
 using IdentityManager.Services.ControllerService;
 using Models.DTOs.EmailSender;
 using Models.DTOs;
+using IdentityManagerAPI.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,29 @@ builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Emai
 var openAiKey = builder.Configuration["OpenAIKey"];
 builder.Services.AddHttpClient();
 builder.Services.Configure<OpenAISettings>(builder.Configuration.GetSection("OpenApi"));
+
+
+//signalR
+builder.Services.AddSignalR();
+// ده لو عايزة تشتغلي بالـ Identity UserId كـ ConnectionId
+//builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
+
+
+//cors policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder
+            .WithOrigins("http://localhost:3000") // غيّري حسب الفرونت
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
+
+
 
 
 // Add services to the container.
@@ -59,6 +84,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 // Add Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
+builder.Services.AddScoped<IMessage, MessageRepo>();
 
 // Add OpenAPI with Bearer Authentication Support
 builder.Services.AddOpenApi("v1", options =>
@@ -106,8 +132,13 @@ app.UseExceptionHandler();
 
 
 app.UseHttpsRedirection();
+
+app.UseCors("CorsPolicy");
+
 app.UseAuthentication(); 
 app.UseAuthorization();
+
+app.MapHub<ChatHub>("/chatHub");
 
 app.UseStaticFiles(new StaticFileOptions
 {

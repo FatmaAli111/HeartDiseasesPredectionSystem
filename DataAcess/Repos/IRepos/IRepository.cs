@@ -15,6 +15,6 @@ namespace DataAcess.Repos.IRepos
         Task AddAsync(T entity);
         Task DeleteAsync(T entity);
 
-
+       
     }
 }

@@ -13,5 +13,13 @@ namespace Models.Domain
         // Navigation property
         [ForeignKey("ImageId")]
         public Image Image { get; set; }
+
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Specialty { get; set; }
+        public int YearsOfExperience { get; set; }
+        public string Description { get; set; }
+        public string? Address { get; set; }
+
     }
 }
