@@ -19,10 +19,13 @@ namespace IdentityManagerAPI.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IWebHostEnvironment _env; // محتاجينه عشان نعرف نحفظ الصورة
 
-        public DoctorsController(UserManager<ApplicationUser> userManager, IWebHostEnvironment env)
+        public IDoctorRepository _doctorRepo { get; }
+
+        public DoctorsController(UserManager<ApplicationUser> userManager, IWebHostEnvironment env,IDoctorRepository DrRepo)
         {
             _userManager = userManager;
             _env = env;
+            _doctorRepo = DrRepo;
         }
 
         [HttpGet("GetAllDoctors")]
@@ -90,6 +93,34 @@ namespace IdentityManagerAPI.Controllers
                 return BadRequest(result.Errors);
 
             return Ok("Done");
+        }
+        [HttpGet("{id}/availability")]
+        public IActionResult GetAvailability(string id)
+        {
+            var availability = _doctorRepo.GetAvailability(id); // should fetch from DB
+            return Ok(availability);
+            
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDoctorInfo(int id)
+        {
+            var doctor = await _doctorRepo.GetDoctorByIdAsync(id);
+            if (doctor == null) return NotFound();
+
+            return Ok(new
+            {
+                id = doctor.DoctorId,
+                name = doctor.Name,
+                specialty = doctor.Specialty
+            });
+        }
+
+        [HttpPost("{id}/setAvailability")]
+        public IActionResult SetAvailability(string id, [FromBody] List<AvailableSlotDto> slots)
+        {
+            _doctorRepo.SetAvailability(id, slots); // Save to DB
+            return Ok(new { success = true });
         }
 
     }

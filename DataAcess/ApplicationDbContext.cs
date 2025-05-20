@@ -26,6 +26,10 @@ namespace DataAcess
         public DbSet<WearableReading> wearableReadings { get; set; }
         public DbSet<Message> messages { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<AvailableSlot> AvailableSlots { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

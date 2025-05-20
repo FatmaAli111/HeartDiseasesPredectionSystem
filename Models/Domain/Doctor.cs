@@ -15,6 +15,8 @@ namespace Models.Domain
 
         [Required, StringLength(10)]
         public string Gender { get; set; }
+        public string Specialty { get; set; }
+
 
         [StringLength(200)]
         public string Address { get; set; }
