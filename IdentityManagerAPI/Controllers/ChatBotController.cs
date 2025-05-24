@@ -5,46 +5,59 @@ using System.Text.Json;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Models.DTOs;
+using Newtonsoft.Json;
 
 namespace IdentityManagerAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class ChatBotController : ControllerBase
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly string _apiKey;
+        private readonly HttpClient _httpClient;
+        private readonly string? _apiKey;
+      
 
-        public ChatBotController(IHttpClientFactory httpClientFactory, IConfiguration configuration, IOptions<OpenAISettings> options)
+        public ChatBotController(HttpClient httpClient , IConfiguration configuration)
         {
-            _httpClientFactory = httpClientFactory;
-            _apiKey = options.Value.ApiKey; // من appsettings.json
+            _httpClient = httpClient;
+            _apiKey = configuration.GetValue<string>("OpenApi:ApiKey");
         }
 
-        [HttpPost("send")]
-        public async Task<IActionResult> SendMessage([FromBody] ChatRequest request)
+        [HttpPost("generate")]
+        public async Task<IActionResult> GenerateContent([FromBody] PromptRequestDto request)
         {
-            var client = _httpClientFactory.CreateClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+            var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={_apiKey}";
 
-            var requestBody = new
+            var body = new
             {
-                model = "gpt-3.5-turbo",
-                messages = new[]
+                contents = new[]
                 {
-                    new { role = "user", content = request.Message }
+                new
+                {
+                    parts = new[]
+                    {
+                        new { text = request.Prompt }
+                    }
                 }
+            }
             };
 
-            var content = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync("https://api.openai.com/v1/chat/completions", content);
+            var json = System.Text.Json.JsonSerializer.Serialize(body);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
 
+            var response = await _httpClient.PostAsync(url, httpContent);
             if (!response.IsSuccessStatusCode)
-                return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
+            {
+                return StatusCode((int)response.StatusCode, "Error calling Gemini API");
+            }
 
-            var responseString = await response.Content.ReadAsStringAsync();
-            return Ok(responseString);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            return Ok(responseContent);
         }
     }
 
+
+
 }
+
+
