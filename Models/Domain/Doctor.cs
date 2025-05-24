@@ -22,6 +22,8 @@ namespace Models.Domain
         public string Address { get; set; }
 
         // Navigation Properties
+        public List<Appointment> Appointments { get; set; }
+
         public virtual List<Recommendation> Recommendations { get; set; }
         public virtual List<ProgressTracking> ProgressTrackings { get; set; }
     }

@@ -34,6 +34,8 @@ namespace Models.Domain
         public string Gender { get; set; }
 
         // Navigation Properties
+        public List<Appointment> Appointments { get; set; }
+
         public virtual List<MedicalHistory> MedicalHistories { get; set; }
         public virtual List<Diagnosis> Diagnoses { get; set; }
         public virtual List<WearableReading> WearableReadings { get; set; }

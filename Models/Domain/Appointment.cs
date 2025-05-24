@@ -9,10 +9,14 @@ namespace Models.Domain
     public class Appointment
     {
         public int Id { get; set; }
-        public string UserId { get; set; }
-        public string DoctorId { get; set; }
+        public int UserId { get; set; }
+        public int DoctorId { get; set; }
         public DateTime Date { get; set; }
         public string Time { get; set; }
+
+        // Navigation Properties
+        public User User { get; set; }
+        public Doctor Doctor { get; set; }
     }
 
 }

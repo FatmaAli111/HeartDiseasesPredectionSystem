@@ -1,24 +1,62 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DataAcess;
+using DataAcess.Repos;
+using DataAcess.Repos.IRepos;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Models.Domain;
 using Models.DTOs;
 
 [ApiController]
 [Route("api/[controller]")]
 public class AppointmentsController : ControllerBase
 {
-    [HttpGet("upcoming/{userId}")]
-    public IActionResult GetUpcomingAppointments(string userId)
+    private readonly IAppointment _appointment;
+
+    public ApplicationDbContext _context { get; }
+
+    public AppointmentsController(IAppointment appointment, ApplicationDbContext context)
     {
-        // Fetch upcoming appointments from database dynamically based on user ID
-        var appointments = GetAppointmentsFromDatabase(userId);
+        _appointment = appointment;
+        _context = context;
+    }
+
+    [HttpGet("upcoming/{userId}")]
+    public IActionResult GetUpcomingAppointments(int userId)
+    {
+        var appointments = _appointment.GetById(userId);
         return Ok(appointments);
     }
 
     [HttpPost("schedule")]
     public IActionResult ScheduleAppointment([FromBody] AppointmentDto dto)
     {
-        // Save appointment to DB
-        return Ok(new { success = true });
+        // نتاكد ان الوقت مش متحجز قبل كده
+        bool isBooked = _context.Appointments.Any(a =>
+            a.DoctorId == dto.DoctorId &&
+            a.Date.Date == dto.Date.Date &&
+            a.Time == dto.Time
+        );
+
+        if (isBooked)
+        {
+            return BadRequest("This time slot is already booked.");
+        }
+
+        // نضيف الموعد
+        var appointment = new Appointment
+        {
+            UserId = dto.UserId,
+            DoctorId = dto.DoctorId,
+            Date = dto.Date,
+            Time = dto.Time
+        };
+
+        _context.Appointments.Add(appointment);
+        _context.SaveChanges();
+
+        return Ok(new { success = true, appointmentId = appointment.Id });
     }
+
 
     [HttpPut("update")]
     public IActionResult UpdateAppointment([FromBody] AppointmentDto dto)
@@ -34,32 +72,17 @@ public class AppointmentsController : ControllerBase
         return Ok(new { success = true });
     }
 
-    [HttpGet("availableSlots")]
-    public IActionResult GetAvailableSlots(string doctorId, DateTime date)
-    {
-        // Example: return available slots dynamically from DB based on doctorId and date
-        var allSlots = new[] { "10:00 AM", "11:00 AM", "12:00 PM", "2:00 PM", "3:00 PM" };
-        var bookedSlots = GetBookedSlotsFromDatabase(doctorId, date);
+   // [HttpGet("availableSlots")]
+    //public IActionResult GetAvailableSlots(string doctorId, DateTime date)
+    //{
+    //    // Example: return available slots dynamically from DB based on doctorId and date
+    //    var allSlots = new[] { "10:00 AM", "11:00 AM", "12:00 PM", "2:00 PM", "3:00 PM" };
+    //    //var bookedSlots = GetBookedSlotsFromDatabase(doctorId, date);
 
-        var availableSlots = allSlots.Except(bookedSlots).ToArray();
-        return Ok(availableSlots);
-    }
+    //    var availableSlots = allSlots.Except().ToArray();
+    //    return Ok(availableSlots);
+    //}
 
-    private List<string> GetBookedSlotsFromDatabase(string doctorId, DateTime date)
-    {
-        // Simulated booked slots (replace with actual DB query)
-        return new List<string> { "11:00 AM" };
-    }
 
-    // Simulated database logic (to be replaced with actual DB calls)
-    private List<object> GetAppointmentsFromDatabase(string userId)
-    {
-        // Example dynamic logic (replace with real DB logic)
-        return new List<object>
-        {
-            new { date = DateTime.UtcNow.AddDays(1).ToString("yyyy-MM-ddTHH:mm:ss") },
-            new { date = DateTime.UtcNow.AddDays(3).ToString("yyyy-MM-ddTHH:mm:ss") },
-            new { date = DateTime.UtcNow.AddDays(5).ToString("yyyy-MM-ddTHH:mm:ss") },
-        };
-    }
+    
 }
