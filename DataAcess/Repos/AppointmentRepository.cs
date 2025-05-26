@@ -17,7 +17,7 @@ namespace DataAcess.Repos
             _db = db;
         }
 
-        public async Task<List<Appointment>> GetById(int id)
+        public async Task<List<Appointment>> GetById(Guid id)
         {
           var AppointmentOfUser= _db.Appointments.
                 Where(a => a.UserId == id && a.Date > DateTime.UtcNow).OrderBy(a=>a.Date).ToList(); 

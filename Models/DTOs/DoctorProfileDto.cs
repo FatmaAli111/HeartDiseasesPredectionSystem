@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Models.DTOs
 {
-    public class DoctorProfileDto
+    public partial class DoctorProfileDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -18,6 +18,6 @@ namespace Models.DTOs
         [Phone]
         public string Phone { get; set; }
         public string? Address { get; set; }
-        public Image Image { get; set; }
+        public ImageDto Image { get; set; }
     }
 }

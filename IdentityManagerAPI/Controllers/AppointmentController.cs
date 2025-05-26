@@ -1,11 +1,13 @@
 ﻿using DataAcess;
 using DataAcess.Repos;
 using DataAcess.Repos.IRepos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.Domain;
 using Models.DTOs;
-
+using System.Security.Claims;
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class AppointmentsController : ControllerBase
@@ -19,18 +21,28 @@ public class AppointmentsController : ControllerBase
         _appointment = appointment;
         _context = context;
     }
+    //بناخد الid فالurl وبيكون من الcredentials بتاعت تسجيل الدخول
 
     [HttpGet("upcoming/{userId}")]
-    public IActionResult GetUpcomingAppointments(int userId)
+    public IActionResult GetUpcomingAppointments(Guid userId)
     {
+
         var appointments = _appointment.GetById(userId);
         return Ok(appointments);
     }
 
     [HttpPost("schedule")]
+    [Authorize(Roles = "User")] // فقط المريض يقدر يحجز
     public IActionResult ScheduleAppointment([FromBody] AppointmentDto dto)
     {
-        // نتاكد ان الوقت مش متحجز قبل كده
+        // نجيب الـ UserId من التوكن
+        var userId = User.FindFirst("sub")?.Value; // أو "id" حسب اسم الكليم
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized("Invalid user.");
+        }
+
+        // نتأكد إن الوقت مش متحجز قبل كده
         bool isBooked = _context.Appointments.Any(a =>
             a.DoctorId == dto.DoctorId &&
             a.Date.Date == dto.Date.Date &&
@@ -45,7 +57,7 @@ public class AppointmentsController : ControllerBase
         // نضيف الموعد
         var appointment = new Appointment
         {
-            UserId = dto.UserId,
+            UserId = Guid.Parse(userId), // نعين الـ UserId من التوكن
             DoctorId = dto.DoctorId,
             Date = dto.Date,
             Time = dto.Time
@@ -56,6 +68,7 @@ public class AppointmentsController : ControllerBase
 
         return Ok(new { success = true, appointmentId = appointment.Id });
     }
+
 
 
     [HttpPut("update")]

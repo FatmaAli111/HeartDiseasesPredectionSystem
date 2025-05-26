@@ -12,7 +12,7 @@ namespace Models.Domain
         
         // Navigation property
         [ForeignKey("ImageId")]
-        public Image Image { get; set; }
+        public byte[] Image { get; set; }
 
         public string FirstName { get; set; }
         public string LastName { get; set; }

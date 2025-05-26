@@ -9,6 +9,6 @@ namespace DataAcess.Repos.IRepos
 {
    public interface IAppointment:IRepository<AppointmentRepository> 
     {
-        Task<List<Appointment>> GetById(int id); 
+        Task<List<Appointment>> GetById(Guid id); 
     }
 }

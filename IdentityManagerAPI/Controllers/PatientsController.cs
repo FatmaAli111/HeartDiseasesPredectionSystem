@@ -30,7 +30,7 @@ namespace IdentityManagerAPI.Controllers
                // Id = user.Id,
                 Name = $"{user.FirstName} {user.LastName}",
                 
-                Image = user.Image != null ? user.Image.FilePath : "https://via.placeholder.com/100"
+               // Image = user.Image != null ? user.Image.FilePath : "https://via.placeholder.com/100"
             }).ToList();
 
             return Ok(patients);

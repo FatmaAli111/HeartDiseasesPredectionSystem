@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAcess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250520033355_Slots")]
-    partial class Slots
+    [Migration("20250526055645_fff")]
+    partial class fff
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -256,6 +256,42 @@ namespace DataAcess.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Models.Domain.Appointment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("DoctorId1")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Time")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId1");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("Models.Domain.AvailableSlot", b =>
@@ -654,6 +690,10 @@ namespace DataAcess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("Image")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<int?>("ImageId")
                         .HasColumnType("int");
 
@@ -671,8 +711,6 @@ namespace DataAcess.Migrations
 
                     b.Property<int>("YearsOfExperience")
                         .HasColumnType("int");
-
-                    b.HasIndex("ImageId");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
@@ -726,6 +764,17 @@ namespace DataAcess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Models.Domain.Appointment", b =>
+                {
+                    b.HasOne("Models.Domain.Doctor", null)
+                        .WithMany("Appointments")
+                        .HasForeignKey("DoctorId1");
+
+                    b.HasOne("Models.Domain.Patient", null)
+                        .WithMany("Appointments")
+                        .HasForeignKey("PatientId");
                 });
 
             modelBuilder.Entity("Models.Domain.AvailableSlot", b =>
@@ -841,15 +890,6 @@ namespace DataAcess.Migrations
                     b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("Models.Domain.ApplicationUser", b =>
-                {
-                    b.HasOne("Models.Domain.Image", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId");
-
-                    b.Navigation("Image");
-                });
-
             modelBuilder.Entity("Models.Domain.Diagnosis", b =>
                 {
                     b.Navigation("Recommendations");
@@ -857,6 +897,8 @@ namespace DataAcess.Migrations
 
             modelBuilder.Entity("Models.Domain.Doctor", b =>
                 {
+                    b.Navigation("Appointments");
+
                     b.Navigation("ProgressTrackings");
 
                     b.Navigation("Recommendations");
@@ -869,6 +911,8 @@ namespace DataAcess.Migrations
 
             modelBuilder.Entity("Models.Domain.Patient", b =>
                 {
+                    b.Navigation("Appointments");
+
                     b.Navigation("Diagnoses");
 
                     b.Navigation("MedicalHistories");

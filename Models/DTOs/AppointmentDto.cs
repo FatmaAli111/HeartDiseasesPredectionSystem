@@ -8,8 +8,8 @@ namespace Models.DTOs
 {
     public class AppointmentDto
     {
-        public int UserId { get; set; }
-        public int DoctorId { get; set; }
+        public Guid UserId { get; set; }
+        public Guid DoctorId { get; set; }
         public DateTime Date { get; set; }
         public string Time { get; set; }
     }

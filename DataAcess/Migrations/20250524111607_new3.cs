@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DataAcess.Migrations
 {
     /// <inheritdoc />
-    public partial class fatma : Migration
+    public partial class new3 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,6 +36,7 @@ namespace DataAcess.Migrations
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Specialty = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
@@ -143,6 +144,28 @@ namespace DataAcess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AvailableSlots",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DoctorId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Time = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DoctorId1 = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AvailableSlots", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AvailableSlots_Doctors_DoctorId1",
+                        column: x => x.DoctorId1,
+                        principalTable: "Doctors",
+                        principalColumn: "DoctorId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
@@ -150,6 +173,12 @@ namespace DataAcess.Migrations
                     Discriminator = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImageId = table.Column<int>(type: "int", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Specialty = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    YearsOfExperience = table.Column<int>(type: "int", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -173,6 +202,34 @@ namespace DataAcess.Migrations
                         column: x => x.ImageId,
                         principalTable: "Image",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Appointments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DoctorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Time = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DoctorId1 = table.Column<int>(type: "int", nullable: true),
+                    PatientId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Appointments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Appointments_Doctors_DoctorId1",
+                        column: x => x.DoctorId1,
+                        principalTable: "Doctors",
+                        principalColumn: "DoctorId");
+                    table.ForeignKey(
+                        name: "FK_Appointments_patients_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "patients",
+                        principalColumn: "PatientId");
                 });
 
             migrationBuilder.CreateTable(
@@ -431,6 +488,16 @@ namespace DataAcess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Appointments_DoctorId1",
+                table: "Appointments",
+                column: "DoctorId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointments_PatientId",
+                table: "Appointments",
+                column: "PatientId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
@@ -473,6 +540,11 @@ namespace DataAcess.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AvailableSlots_DoctorId1",
+                table: "AvailableSlots",
+                column: "DoctorId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_diagnosis_PatientId",
@@ -529,6 +601,9 @@ namespace DataAcess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Appointments");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -542,6 +617,9 @@ namespace DataAcess.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "AvailableSlots");
 
             migrationBuilder.DropTable(
                 name: "MedicalHistory");

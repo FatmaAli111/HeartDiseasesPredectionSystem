@@ -28,20 +28,41 @@ namespace IdentityManagerAPI.Controllers
             _doctorRepo = DrRepo;
         }
 
+        [HttpGet]
         [HttpGet("GetAllDoctors")]
         public async Task<IActionResult> GetDoctors()
         {
+            int pageNumber = 1, pageSize = 10;
             var users = await _userManager.GetUsersInRoleAsync("Doctor");
 
-            var doctors = users.Select(user => new
-            {
-                Id = user.Id,
-                Name = user.UserName, // أو FullName لو عامل خاصية كده
-                ImageUrl = user.Image // ?? "https://via.placeholder.com/100" // لو مفيش صورة
-            }).ToList();
+            var totalDoctors = users.Count;
+            var totalPages = (int)Math.Ceiling(totalDoctors / (double)pageSize);
 
-            return Ok(doctors);
+            var doctors = users
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(user => new
+                {
+                    Id = user.Id,
+                    Name = user.UserName,
+                    Image = user.Image != null ? $"data:image/jpeg;base64,{Convert.ToBase64String(user.Image)}" : null,
+                    Speciality = user.Specialty,
+                    YearsOfEx = user.YearsOfExperience,
+                    Description = user.Description,
+                    Address = user.Address
+                })
+                .ToList();
+
+            return Ok(new
+            {
+                TotalCount = totalDoctors,
+                TotalPages = totalPages,
+                CurrentPage = pageNumber,
+                PageSize = pageSize,
+                Doctors = doctors
+            });
         }
+
         [HttpPost]
         [Consumes("multipart/form-data")]
         [Authorize(Roles = "Doctor")]
@@ -53,7 +74,7 @@ namespace IdentityManagerAPI.Controllers
             if (user == null)
                 return Unauthorized();
 
-            // نملأ بيانات الدكتور
+            // تحديث البيانات
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Specialty = model.Specialty;
@@ -62,29 +83,14 @@ namespace IdentityManagerAPI.Controllers
             user.PhoneNumber = model.Phone;
             user.Address = model.Address;
 
-            // معالجة الصورة
+            // لو فيه صورة
             if (model.Image?.File != null && model.Image.File.Length > 0)
             {
-                var uploadsFolder = Path.Combine(_env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), "Uploads");
-                if (!Directory.Exists(uploadsFolder))
-                    Directory.CreateDirectory(uploadsFolder);
-
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.Image.File.FileName);
-                var filePath = Path.Combine(uploadsFolder, fileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                using (var memoryStream = new MemoryStream())
                 {
-                    await model.Image.File.CopyToAsync(fileStream);
+                    await model.Image.File.CopyToAsync(memoryStream);
+                    user.Image = memoryStream.ToArray(); // خزن الصورة مباشرة في قاعدة البيانات
                 }
-
-                // نحفظ بيانات الصورة
-                user.Image = new Image
-                {
-                    FileName = fileName,
-                    FileExtension = Path.GetExtension(fileName),
-                    FileSize = model.Image.File.Length,
-                    FilePath = $"/Uploads/{fileName}"
-                };
             }
 
             var result = await _userManager.UpdateAsync(user);
@@ -92,8 +98,10 @@ namespace IdentityManagerAPI.Controllers
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            return Ok("Done");
+            return Ok("Profile updated successfully.");
         }
+
+
         [HttpGet("{id}/availability")]
         public IActionResult GetAvailability(string id)
         {

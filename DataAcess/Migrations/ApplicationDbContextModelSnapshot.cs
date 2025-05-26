@@ -266,7 +266,10 @@ namespace DataAcess.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DoctorId")
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("DoctorId1")
                         .HasColumnType("int");
 
                     b.Property<int?>("PatientId")
@@ -276,19 +279,14 @@ namespace DataAcess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("UserId1")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DoctorId");
+                    b.HasIndex("DoctorId1");
 
                     b.HasIndex("PatientId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Appointments");
                 });
@@ -689,6 +687,10 @@ namespace DataAcess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("Image")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<int?>("ImageId")
                         .HasColumnType("int");
 
@@ -706,8 +708,6 @@ namespace DataAcess.Migrations
 
                     b.Property<int>("YearsOfExperience")
                         .HasColumnType("int");
-
-                    b.HasIndex("ImageId");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
@@ -765,25 +765,13 @@ namespace DataAcess.Migrations
 
             modelBuilder.Entity("Models.Domain.Appointment", b =>
                 {
-                    b.HasOne("Models.Domain.Doctor", "Doctor")
+                    b.HasOne("Models.Domain.Doctor", null)
                         .WithMany("Appointments")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DoctorId1");
 
                     b.HasOne("Models.Domain.Patient", null)
                         .WithMany("Appointments")
                         .HasForeignKey("PatientId");
-
-                    b.HasOne("Models.Domain.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.Domain.AvailableSlot", b =>
@@ -897,15 +885,6 @@ namespace DataAcess.Migrations
                         .IsRequired();
 
                     b.Navigation("Patient");
-                });
-
-            modelBuilder.Entity("Models.Domain.ApplicationUser", b =>
-                {
-                    b.HasOne("Models.Domain.Image", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId");
-
-                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("Models.Domain.Diagnosis", b =>
