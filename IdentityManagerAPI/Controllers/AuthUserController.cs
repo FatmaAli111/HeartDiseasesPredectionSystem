@@ -8,6 +8,9 @@ using System.Net;
 using DataAcess.Repos.IRepos;
 using Models.Domain;
 using IdentityManager.Services.ControllerService.IControllerService;
+using Models.DTOs.EmailSender;
+using System.Net.Mail;
+using Microsoft.Extensions.Options;
 
 namespace IdentityManagerAPI.Controllers
 {
@@ -16,13 +19,15 @@ namespace IdentityManagerAPI.Controllers
     public class AuthUserController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly EmailSettings _emailSettings;
 
         public UserManager<ApplicationUser> _userManager { get; }
 
-        public AuthUserController(IAuthService authService, UserManager<ApplicationUser> userManager)
+        public AuthUserController(IAuthService authService, UserManager<ApplicationUser> userManager, IOptions<EmailSettings> emailSettings)
         {
             _authService = authService;
             _userManager = userManager;
+            _emailSettings = emailSettings.Value;
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequestDTO)
@@ -55,11 +60,32 @@ namespace IdentityManagerAPI.Controllers
                 return BadRequest("User not found.");
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var resetLink = $"https://localhost:7047/api/AuthUser/reset-password?token={token}&email={email}";
 
-            
-            var resetLink = $"https://yourfrontend/reset-password?email={email}&token={Uri.EscapeDataString(token)}";
-            
-            Console.WriteLine($"Send this link to user: {resetLink} ,Tokenn={token}");
+            // إعدادات الإرسال
+            var fromAddress = new MailAddress(_emailSettings.FromEmail, _emailSettings.FromName);
+            var toAddress = new MailAddress(email); // المستخدم نفسه
+            string subject = "Reset Your Password";
+            string body = $"<p>Click <a href='{resetLink}'>here</a> to reset your password.</p>";
+
+            using (var smtp = new SmtpClient
+            {
+                Host = _emailSettings.SmtpHost,
+                Port = _emailSettings.SmtpPort,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(_emailSettings.FromEmail, _emailSettings.Password)
+            })
+            using (var message = new MailMessage(fromAddress, toAddress)
+            {
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            })
+            {
+                await smtp.SendMailAsync(message);
+            }
 
             return Ok(new { message = "Reset link sent. Check your email." });
         }
