@@ -19,7 +19,7 @@ namespace IdentityManager.Services.ControllerService
             _userRepository = userRepository;
         }
 
-        public async Task<object> LoginAsync(LoginRequestDTO loginRequestDTO)
+        public async Task<LoginResponseDTO> LoginAsync(LoginRequestDTO loginRequestDTO)
         {
             return await _userRepository.Login(loginRequestDTO);
         }

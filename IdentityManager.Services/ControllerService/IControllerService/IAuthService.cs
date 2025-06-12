@@ -9,7 +9,7 @@ namespace IdentityManager.Services.ControllerService.IControllerService
 {
     public interface IAuthService
     {
-        Task<object> LoginAsync(LoginRequestDTO loginRequestDTO);
+        Task<LoginResponseDTO> LoginAsync(LoginRequestDTO loginRequestDTO);
         Task<object> RegisterAsync(RegisterRequestDTO registerRequestDTO);
     }
 }

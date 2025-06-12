@@ -11,6 +11,7 @@ using IdentityManager.Services.ControllerService.IControllerService;
 using Models.DTOs.EmailSender;
 using System.Net.Mail;
 using Microsoft.Extensions.Options;
+using System.Web;
 
 namespace IdentityManagerAPI.Controllers
 {
@@ -33,6 +34,12 @@ namespace IdentityManagerAPI.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequestDTO)
         {
             var result = await _authService.LoginAsync(loginRequestDTO);
+
+            if (result == null || string.IsNullOrEmpty(result.Token))
+            {
+                return BadRequest(new { message = "Invalid username or password" });
+            }
+
             return Ok(result);
         }
         [HttpPost("register")]
@@ -60,11 +67,14 @@ namespace IdentityManagerAPI.Controllers
                 return BadRequest("User not found.");
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var resetLink = $"https://localhost:7047/api/AuthUser/reset-password?token={token}&email={email}";
+            var encodedToken = HttpUtility.UrlEncode(token); // مهم جدًا 
 
-            // إعدادات الإرسال
+            // 🟡 عدلنا هنا: بنستخدم localhost بدل yourdomain.com
+            var resetLink = $"http://localhost:3000/reset-password?token={encodedToken}&email={email}";
+
+            // إعدادات الإرسال 
             var fromAddress = new MailAddress(_emailSettings.FromEmail, _emailSettings.FromName);
-            var toAddress = new MailAddress(email); // المستخدم نفسه
+            var toAddress = new MailAddress(email);
             string subject = "Reset Your Password";
             string body = $"<p>Click <a href='{resetLink}'>here</a> to reset your password.</p>";
 

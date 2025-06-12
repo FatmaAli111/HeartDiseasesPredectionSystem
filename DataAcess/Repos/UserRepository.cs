@@ -54,20 +54,17 @@ namespace DataAcess.Repos
             var user = await userManager.FindByNameAsync(loginRequestDTO.UserName);
             if (user == null || !await userManager.CheckPasswordAsync(user, loginRequestDTO.Password))
             {
-                return new LoginResponseDTO()
-                {
-                    Token = "",
-                    User = null,
-                };
+                return null; // خلي القيمة null علشان نعرف في الـ controller إنها فشلت
             }
+
             var userRoles = await userManager.GetRolesAsync(user);
 
             var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Name, user.UserName)
-            };
+    {
+        new Claim(ClaimTypes.NameIdentifier, user.Id),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim(ClaimTypes.Name, user.UserName)
+    };
             claims.AddRange(userRoles.Select(r => new Claim(ClaimTypes.Role, r)));
 
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(securityKey));
@@ -78,7 +75,7 @@ namespace DataAcess.Repos
                 expires: DateTime.UtcNow.AddDays(7),
                 signingCredentials: creds);
 
-            return new LoginResponseDTO()
+            return new LoginResponseDTO
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 User = mapper.Map<UserDTO>(user),

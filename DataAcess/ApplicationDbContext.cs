@@ -28,6 +28,7 @@ namespace DataAcess
         public DbSet<User> Users { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<AvailableSlot> AvailableSlots { get; set; }
+        public DbSet<UserHealthInfo> UserHealthInfos { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
