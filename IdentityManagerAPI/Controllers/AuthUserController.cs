@@ -69,10 +69,9 @@ namespace IdentityManagerAPI.Controllers
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedToken = HttpUtility.UrlEncode(token); // مهم جدًا 
 
-            // 🟡 عدلنا هنا: بنستخدم localhost بدل yourdomain.com
-            var resetLink = $"http://localhost:3000/reset-password?token={encodedToken}&email={email}";
+            var resetLink = $"http://127.0.0.1:5500/resetpassword.html?token={encodedToken}&email={email}";
 
-            // إعدادات الإرسال 
+
             var fromAddress = new MailAddress(_emailSettings.FromEmail, _emailSettings.FromName);
             var toAddress = new MailAddress(email);
             string subject = "Reset Your Password";

@@ -7,7 +7,7 @@ using Models.DTOs;
 
 [Authorize]
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/UserHealth")]
 public class UserHealthController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
@@ -89,13 +89,13 @@ public class UserHealthController : ControllerBase
         };
 
         var response = await client.PostAsJsonAsync(flaskUrl, requestData);
-
-        if (!response.IsSuccessStatusCode)
-            return StatusCode(500, "Prediction service failed.");
-
+         if (!response.IsSuccessStatusCode)
+        {
+            var errorText = await response.Content.ReadAsStringAsync();
+            return StatusCode(500, $"Prediction service failed: {errorText}");
+        }
         var flaskResponse = await response.Content.ReadFromJsonAsync<FlaskResponseDto>();
 
-        // تحويل البيانات لحفظها في جدول UserHealthInfo
         var healthInfo = new UserHealthInfo
         {
             Age = dto.Age,

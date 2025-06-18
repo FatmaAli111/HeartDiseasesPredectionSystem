@@ -19,6 +19,7 @@ using Models.DTOs.EmailSender;
 using Models.DTOs;
 using IdentityManagerAPI.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,12 @@ builder.Services.Configure<OpenAISettings>(builder.Configuration.GetSection("Ope
 builder.Services.AddSignalR();
 // ده لو عايزة تشتغلي بالـ Identity UserId كـ ConnectionId
 //builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
 
 
 //cors policy

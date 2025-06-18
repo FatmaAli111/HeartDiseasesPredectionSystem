@@ -21,7 +21,6 @@ public class AppointmentsController : ControllerBase
         _appointment = appointment;
         _context = context;
     }
-    //بناخد الid فالurl وبيكون من الcredentials بتاعت تسجيل الدخول
 
     [HttpGet("upcoming/{userId}")]
     public IActionResult GetUpcomingAppointments(Guid userId)
@@ -32,17 +31,15 @@ public class AppointmentsController : ControllerBase
     }
 
     [HttpPost("schedule")]
-    [Authorize(Roles = "User")] // فقط المريض يقدر يحجز
+    [Authorize] 
     public IActionResult ScheduleAppointment([FromBody] AppointmentDto dto)
     {
-        // نجيب الـ UserId من التوكن
-        var userId = User.FindFirst("sub")?.Value; // أو "id" حسب اسم الكليم
+        var userId = User.FindFirst("sub")?.Value;
         if (string.IsNullOrEmpty(userId))
         {
             return Unauthorized("Invalid user.");
         }
 
-        // نتأكد إن الوقت مش متحجز قبل كده
         bool isBooked = _context.Appointments.Any(a =>
             a.DoctorId == dto.DoctorId &&
             a.Date.Date == dto.Date.Date &&
@@ -54,10 +51,9 @@ public class AppointmentsController : ControllerBase
             return BadRequest("This time slot is already booked.");
         }
 
-        // نضيف الموعد
         var appointment = new Appointment
         {
-            UserId = Guid.Parse(userId), // نعين الـ UserId من التوكن
+            UserId = Guid.Parse(userId), 
             DoctorId = dto.DoctorId,
             Date = dto.Date,
             Time = dto.Time
@@ -68,8 +64,6 @@ public class AppointmentsController : ControllerBase
 
         return Ok(new { success = true, appointmentId = appointment.Id });
     }
-
-
 
     [HttpPut("update")]
     public IActionResult UpdateAppointment([FromBody] AppointmentDto dto)

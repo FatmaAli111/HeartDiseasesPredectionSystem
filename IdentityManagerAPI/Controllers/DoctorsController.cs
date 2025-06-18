@@ -17,7 +17,7 @@ namespace IdentityManagerAPI.Controllers
     public class DoctorsController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IWebHostEnvironment _env; // محتاجينه عشان نعرف نحفظ الصورة
+        private readonly IWebHostEnvironment _env; 
 
         public IDoctorRepository _doctorRepo { get; }
 
@@ -74,7 +74,6 @@ namespace IdentityManagerAPI.Controllers
             if (user == null)
                 return Unauthorized();
 
-            // تحديث البيانات
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Specialty = model.Specialty;
@@ -83,7 +82,6 @@ namespace IdentityManagerAPI.Controllers
             user.PhoneNumber = model.Phone;
             user.Address = model.Address;
 
-            // لو فيه صورة
             if (model.Image?.File != null && model.Image.File.Length > 0)
             {
                 using (var memoryStream = new MemoryStream())
@@ -127,7 +125,7 @@ namespace IdentityManagerAPI.Controllers
         [HttpPost("{id}/setAvailability")]
         public IActionResult SetAvailability(string id, [FromBody] List<AvailableSlotDto> slots)
         {
-            _doctorRepo.SetAvailability(id, slots); // Save to DB
+            _doctorRepo.SetAvailability(id, slots);
             return Ok(new { success = true });
         }
 
