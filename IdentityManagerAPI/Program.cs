@@ -44,23 +44,17 @@ builder.Services.AddControllers()
     });
 
 
-//cors policy
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder =>
     {
         builder
-            //.WithOrigins("http://localhost:3000") // غيّري حسب الفرونت
-            //.AllowAnyHeader()
-            //.AllowAnyMethod()
-            //.AllowCredentials();
-            .AllowAnyOrigin() // <-- مؤقتًا نسمح لكل الـ Origins
+            .SetIsOriginAllowed(origin => true) // تسمح لأي origin مؤقتًا
             .AllowAnyHeader()
-            .AllowAnyMethod();
-            //.AllowCredentials();
+            .AllowAnyMethod()
+            .AllowCredentials(); // ضروري علشان SignalR يشتغل بيوزر معين
     });
 });
-
 
 
 

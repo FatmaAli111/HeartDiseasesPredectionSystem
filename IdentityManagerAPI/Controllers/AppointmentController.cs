@@ -22,19 +22,26 @@ public class AppointmentsController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("upcoming/{userId}")]
-    public IActionResult GetUpcomingAppointments(Guid userId)
+    [HttpGet("upcoming")]
+    public async Task<IActionResult> GetUpcomingAppointments()
     {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        var appointments = _appointment.GetById(userId);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized("Invalid user.");
+        }
+
+        var appointments = await _appointment.GetById(userId); // لازم await
         return Ok(appointments);
     }
 
     [HttpPost("schedule")]
-    [Authorize] 
+    [Authorize]
     public IActionResult ScheduleAppointment([FromBody] AppointmentDto dto)
     {
-        var userId = User.FindFirst("sub")?.Value;
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
         if (string.IsNullOrEmpty(userId))
         {
             return Unauthorized("Invalid user.");
@@ -53,7 +60,7 @@ public class AppointmentsController : ControllerBase
 
         var appointment = new Appointment
         {
-            UserId = Guid.Parse(userId), 
+            UserId = Guid.Parse(userId),
             DoctorId = dto.DoctorId,
             Date = dto.Date,
             Time = dto.Time

@@ -1,4 +1,5 @@
 ﻿using DataAcess.Repos.IRepos;
+using Microsoft.EntityFrameworkCore;
 using Models.Domain;
 using System;
 using System.Collections.Generic;
@@ -17,14 +18,17 @@ namespace DataAcess.Repos
             _db = db;
         }
 
-        public async Task<List<Appointment>> GetById(Guid id)
+        public async Task<List<Appointment>> GetById(string id)
         {
-          var AppointmentOfUser= _db.Appointments.
-                Where(a => a.UserId == id && a.Date > DateTime.UtcNow).OrderBy(a=>a.Date).ToList(); 
-            
-            return  AppointmentOfUser;
+            var userId = Guid.Parse(id);
+            var AppointmentOfUser = await _db.Appointments
+                .Where(a => a.UserId == userId && a.Date > DateTime.UtcNow)
+                .OrderBy(a => a.Date)
+                .ToListAsync();
+
+            return AppointmentOfUser;
         }
 
-      
+
     }
 }
