@@ -44,11 +44,11 @@ namespace IdentityManagerAPI.Controllers
                 .Select(user => new
                 {
                     Id = user.Id,
-                    Name = user.UserName,
+                    Name = user.FirstName+user.LastName,
                     Image = user.Image != null ? $"data:image/jpeg;base64,{Convert.ToBase64String(user.Image)}" : null,
                     Speciality = user.Specialty,
-                    YearsOfEx = user.YearsOfExperience,
-                    Description = user.Description,
+                    YearsOfEx = user.FirstName + user.LastName,
+                    Description = user.FirstName + user.LastName,
                     Address = user.Address
                 })
                 .ToList();

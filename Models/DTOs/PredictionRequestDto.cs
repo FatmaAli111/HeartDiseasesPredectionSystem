@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,8 @@ namespace Models.DTOs
         public int Glucose { get; set; }
         public string Education { get; set; }
         public int Cholesterol { get; set; }
+
+        public IFormFile? Image { get; set; }
     }
 
 }

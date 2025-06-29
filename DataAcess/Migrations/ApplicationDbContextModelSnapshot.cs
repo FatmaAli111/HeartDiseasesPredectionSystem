@@ -742,6 +742,9 @@ namespace DataAcess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("IsSmoker")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

@@ -30,32 +30,34 @@ namespace IdentityManagerAPI.Controllers
         {
             var users = await _userManager.GetUsersInRoleAsync("Patient");
 
-            // هاتي الـ IDs الخاصة بالمستخدمين
             var userIds = users.Select(u => u.Id).ToList();
 
-            // هاتي الـ UserHealthInfo المرتبط بالمستخدمين دول
             var healthInfos = _context.UserHealthInfos
                 .Where(h => userIds.Contains(h.UserId))
                 .ToList();
 
-            // دمج البيانات
             var patients = users.Select(user =>
             {
                 var healthInfo = healthInfos.FirstOrDefault(h => h.UserId == user.Id);
 
+                // 👇 تحويل الصورة إلى Base64
+                string imageBase64 = healthInfo?.Image != null
+                    ? Convert.ToBase64String(healthInfo.Image)
+                    : null;
+
                 return new
                 {
                     Id = user.Id,
-                    Name = $"{user.UserName}", // ممكن تخليها FirstName + LastName لو موجودين
+                    Name = $"{user.Name}",
                     Age = healthInfo?.Age ?? 0,
                     Gender = healthInfo?.Gender ?? "Unknown",
-                    MedicalConditions = healthInfo?.MedicalConditions ?? "Unknown"
+                    MedicalConditions = healthInfo?.MedicalConditions ?? "Unknown",
+                    ImageBase64 = imageBase64 // 👈 عرض الصورة
                 };
             }).ToList();
 
             return Ok(patients);
         }
-
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(Guid id)

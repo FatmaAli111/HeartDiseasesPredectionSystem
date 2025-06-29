@@ -39,4 +39,6 @@ public class UserHealthInfo
 
     [ForeignKey("UserId")]
     public IdentityUser User { get; set; }
+    public byte[]? Image { get; set; }
+
 }

@@ -63,12 +63,24 @@ public class UserHealthController : ControllerBase
     }
 
     [HttpPost("predict-and-save")]
-    public async Task<IActionResult> PredictAndSave([FromBody] PredictionRequestDto dto)
+    public async Task<IActionResult> PredictAndSave([FromForm] PredictionRequestDto dto)
     {
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
             return Unauthorized();
 
+        // رفع الصورة من الفورم وتخزينها في بايتات
+        byte[] imageBytes = null;
+        if (dto.Image != null && dto.Image.Length > 0)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                await dto.Image.CopyToAsync(memoryStream);
+                imageBytes = memoryStream.ToArray(); // 👈 هنا بنخزن الصورة كبايتات
+            }
+        }
+
+        // البيانات المرسلة لـ Flask API
         var client = new HttpClient();
         var flaskUrl = "http://127.0.0.1:5000/predict";
 
@@ -89,11 +101,12 @@ public class UserHealthController : ControllerBase
         };
 
         var response = await client.PostAsJsonAsync(flaskUrl, requestData);
-         if (!response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
         {
             var errorText = await response.Content.ReadAsStringAsync();
             return StatusCode(500, $"Prediction service failed: {errorText}");
         }
+
         var flaskResponse = await response.Content.ReadFromJsonAsync<FlaskResponseDto>();
 
         var healthInfo = new UserHealthInfo
@@ -111,6 +124,7 @@ public class UserHealthController : ControllerBase
             UserId = user.Id,
             SystolicBP = flaskResponse.Predictions.SYSBP.ToString("F2"),
             Hypertension = flaskResponse.MetricsAnalysis["Systolic BP"].Status,
+            Image = imageBytes // 👈 حفظ الصورة
         };
 
         _context.UserHealthInfos.Add(healthInfo);
