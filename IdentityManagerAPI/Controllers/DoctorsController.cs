@@ -47,8 +47,8 @@ namespace IdentityManagerAPI.Controllers
                     Name = user.FirstName+user.LastName,
                     Image = user.Image != null ? $"data:image/jpeg;base64,{Convert.ToBase64String(user.Image)}" : null,
                     Speciality = user.Specialty,
-                    YearsOfEx = user.FirstName + user.LastName,
-                    Description = user.FirstName + user.LastName,
+                    YearsOfEx = user.YearsOfExperience,
+                    Description = user.Description,
                     Address = user.Address
                 })
                 .ToList();
