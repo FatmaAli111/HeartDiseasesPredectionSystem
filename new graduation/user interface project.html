@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Monitor - AI-Powered Health Tracking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00b894;
+            --secondary-color: #00b894;
+            --accent-color: #00b894;
+            --light-color: #f8f9fa;
+            --dark-color: #202124;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            font-size: 1.8rem;
+        }
+        
+        .navbar-brand i {
+            font-size: 1.8rem;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        .navbar-nav .nav-link {
+            font-size: 18px;
+            margin-left: 15px;
+            transition: color 0.3s, transform 0.3s;
+            color: black;
+            font-weight: bold;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #00b894;
+            transform: scale(1.1);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 10px 25px;
+            font-weight: 500;
+            border-radius: 50px;
+        }
+        
+        .btn-primary:hover {
+            background-color: #00997b;
+            border-color: #00997b;
+        }
+        
+        .btn-outline {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 500;
+            padding: 10px 25px;
+            border-radius: 50px;
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* زر تسجيل الخروج الجديد */
+        .btn-logout {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 10px 25px;
+            font-weight: 500;
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            margin-left: 15px;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background-color: #00997b;
+            border-color: #00997b;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-section h1 {
+            font-weight: 700;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+        }
+        
+        .hero-section p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        .cta-button {
+            background-color: var(--accent-color);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.3);
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 184, 148, 0.4);
+            background-color: #00997b;
+            color: white;
+        }
+        
+        .feature-section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--primary-color);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            height: 100%;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 184, 148, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            color: var(--primary-color);
+            font-size: 2rem;
+        }
+        
+        .feature-card h3 {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+        
+        .feature-card p {
+            color: #666;
+        }
+        
+        .footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 60px 0 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        
+        .footer-links a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .social-icons {
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            margin: 0 8px;
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .social-icons a:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .feature-img {
+            border-radius: 50%;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            animation: float 4s ease-in-out infinite;
+            margin-bottom: 20px;
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-buttons .btn {
+            width: 120px;
+            text-align: center;
+        }
+        
+        /* Custom container for navbar to match width */
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0 15px;
+        }
+
+        /* Settings button style */
+        .settings-btn {
+            color: var(--dark-color);
+            font-size: 1.25rem;
+            margin-left: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .settings-btn:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="navbar-container d-flex justify-content-between">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-heartbeat"></i> Health Monitor
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="user interface project.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="chat bot.html">Chatbot</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact us.html">Contact Us</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <a href="setting.html" class="settings-btn mx-3">
+                        <i class="fas fa-cog"></i>
+                    </a>
+                    <!-- زر تسجيل الخروج المحسن -->
+                    <a href="#" class="btn-logout" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                    <a href="login1.html" class="btn btn-outline mx-2" id="loginBtn">Login</a>
+                    <a href="sign up.html" class="btn btn-primary" id="signupBtn">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="container hero-content">
+            <h1>Empowering Your Health</h1>
+            <p class="lead">Discover the future of health monitoring with our AI-powered tools that provide accurate predictions and personalized insights.</p>
+            <a href="#" id="getStartedBtn" class="cta-button">Get Started For Free</a>
+        </div>
+    </section>
+
+    <section class="feature-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Advanced Features</h2>
+                <p>Revolutionizing healthcare through technology</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <img src="photo/medo.png.jpg" alt="AI Prediction" class="feature-img">
+                        <h3>AI-Powered Prediction</h3>
+                        <p>Our advanced algorithms analyze your health data to predict potential issues before they become serious, giving you time to take preventive action.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <img src="photo\alaa.png.webp" alt="Remote Consultations" class="feature-img">
+                        <h3>Remote Consultations</h3>
+                        <p>Connect instantly with top healthcare professionals through our secure platform, saving you time and providing expert care from anywhere.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <img src="photo/nedo.png.webp" alt="Smart Monitoring" class="feature-img">
+                        <h3>Smart Health Monitoring</h3>
+                        <p>Track your vital signs in real-time with our intelligent system that learns your patterns and alerts you to any concerning changes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Support</a>
+                <a href="#">Careers</a>
+                <a href="#">Press</a>
+            </div>
+            <div class="social-icons text-center">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+            <div class="copyright text-center">
+                <p>&copy; 2025 Health Monitor. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const token = localStorage.getItem("token");
+
+        const loginBtn = document.getElementById("loginBtn");
+        const signupBtn = document.getElementById("signupBtn");
+        const logoutBtn = document.getElementById("logoutBtn");
+        const settingsBtn = document.getElementById("settingsBtn");
+
+        if (token) {
+            // مستخدم مسجل دخول
+            loginBtn.style.display = "none";
+            signupBtn.style.display = "none";
+            logoutBtn.style.display = "inline-block";
+            settingsBtn.style.display = "inline-block";
+        } else {
+            // مش مسجل دخول
+            loginBtn.style.display = "inline-block";
+            signupBtn.style.display = "inline-block";
+            logoutBtn.style.display = "none";
+            settingsBtn.style.display = "inline-block";
+        }
+
+        // زر تسجيل الخروج يمسح التوكن
+        logoutBtn.addEventListener("click", function () {
+            localStorage.removeItem("token");
+            // إعادة تحميل الصفحة أو الانتقال إلى صفحة تسجيل الدخول
+            window.location.href = "login1.html";
+        });
+    });
+         document.getElementById("getStartedBtn").addEventListener("click", function (e) {
+        e.preventDefault(); // نمنع التنقل التلقائي
+
+        const role = localStorage.getItem("role")?.toLowerCase(); // نحول لـ lowercase لو في Capital
+
+        if (role === "doctor") {
+        window.location.href = encodeURI("doctors form.html");
+        } else if (role === "patient") {
+            window.location.href = "survey1.html";
+        } else {
+            alert("User role is not defined. Please log in first.");
+        }
+    });
+        // كود تسجيل الخروج المحسن
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // 1. محاولة إنهاء الجلسة من جانب الخادم
+            fetch('/logout', {
+                method: 'POST',
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                // 2. مسح التخزين المحلي بغض النظر عن استجابة الخادم
+                localStorage.clear();
+                sessionStorage.clear();
+                
+               
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // إذا فشل الاتصال بالخادم، نفذ عملية تسجيل الخروج محليًا
+                localStorage.clear();
+                sessionStorage.clear();
+               
+            });
+        });
+
+        // الكود الأصلي للتنقل السلس
+        $('a[href*="#"]').on('click', function(e) {
+            e.preventDefault();
+            $('html, body').animate(
+                {
+                    scrollTop: $($(this).attr('href')).offset().top - 70,
+                },
+                500,
+                'linear'
+            );
+        });
+        
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 50) {
+                $('.navbar').addClass('navbar-scrolled');
+            } else {
+                $('.navbar').removeClass('navbar-scrolled');
+            }
+        });
+         document.getElementById("logoutBtn").addEventListener("click", function (e) {
+        e.preventDefault(); // عشان ما يعملش التنقل الافتراضي
+
+        // امسحي التوكن وأي بيانات مخزنة
+        localStorage.removeItem("token");
+        localStorage.removeItem("surveyPage1Data");
+        localStorage.removeItem("medicalHistoryData");
+        localStorage.removeItem("fatigueData");
+
+        // رجّعي المستخدم لصفحة تسجيل الدخول
+        window.location.href = "login1.html";
+    });
+    </script>
+</body>
+</html>

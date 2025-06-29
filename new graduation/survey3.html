@@ -1,0 +1,547 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Health Monitor - Stress & Fatigue Survey</title> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"> 
+    <style> 
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            background-color: #ffffff; 
+            color: #333; 
+        } 
+         
+        .navbar { 
+            background-color: white; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+            padding: 15px 0; 
+        } 
+ 
+        .navbar-nav .nav-link { 
+            font-size: 18px; 
+            margin-left: 15px; 
+            transition: color 0.3s, transform 0.3s; 
+            color: black; 
+            font-weight: bold; 
+        } 
+ 
+        .navbar-nav .nav-link:hover { 
+            color: #00b894; 
+            transform: scale(1.1); 
+        } 
+         
+        .navbar-brand { 
+            color: #00b894 !important; 
+            font-weight: bold; 
+            font-size: 1.5rem; 
+        } 
+         
+        .navbar-brand i { 
+            font-size: 1.8rem; 
+            margin-right: 10px; 
+            vertical-align: middle; 
+        } 
+         
+        /* Custom container for navbar to match width */ 
+        .navbar-container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            width: 100%; 
+            padding: 0 15px; 
+        } 
+         
+        .survey-container { 
+            max-width: 800px; 
+            margin: 30px auto; 
+            padding: 30px; 
+            background-color: white; 
+            border-radius: 10px; 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); 
+        } 
+         
+        h1 { 
+            color: #00b894; 
+            text-align: center; 
+            margin-bottom: 30px; 
+        } 
+         
+        .survey-intro { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            color: #666; 
+            font-size: 18px; 
+        } 
+         
+        .form-group { 
+            margin-bottom: 25px; 
+        } 
+         
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            color: #444; 
+        } 
+         
+        input[type="text"], 
+        input[type="number"], 
+        select { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #ddd; 
+            border-radius: 6px; 
+            font-size: 16px; 
+            transition: border-color 0.3s; 
+        } 
+         
+        input[type="text"]:focus, 
+        input[type="number"]:focus, 
+        select:focus { 
+            border-color: #00b894; 
+            outline: none; 
+        } 
+         
+        .radio-group { 
+            display: flex; 
+            gap: 20px; 
+        } 
+         
+        .radio-option { 
+            display: flex; 
+            align-items: center; 
+        } 
+         
+        .radio-option input { 
+            margin-right: 8px; 
+        } 
+         
+        .conditional-question { 
+            margin-top: 15px; 
+            margin-left: 20px; 
+            padding-left: 20px; 
+            border-left: 3px solid #eee; 
+            display: none; 
+        } 
+         
+        .button-group { 
+            display: flex; 
+            justify-content: flex-end; 
+            margin-top: 40px; 
+            gap: 10px; 
+        } 
+         
+        button { 
+            background-color: #00b894; 
+            color: white; 
+            border: none; 
+            padding: 12px 25px; 
+            font-size: 16px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            transition: background-color 0.3s; 
+        } 
+         
+        button:hover { 
+            background-color: #00a884; 
+        } 
+         
+        .predict-btn { 
+            background-color:#00a884; 
+        } 
+         
+        .predict-btn:hover { 
+            background-color:#00a884; 
+        } 
+         
+        .save-btn { 
+            background-color: #00a884; 
+        } 
+         
+        .save-btn:hover { 
+            background-color: #00a884; 
+        } 
+         
+        .progress-bar { 
+            height: 6px; 
+            background-color: #e0e0e0; 
+            border-radius: 3px; 
+            margin-bottom: 30px; 
+            overflow: hidden; 
+        } 
+         
+        .progress { 
+            height: 100%; 
+            background-color: #00b894; 
+            width: 0%; 
+            transition: width 0.3s; 
+        } 
+         
+        .error-message { 
+            color: #e74c3c; 
+            font-size: 14px; 
+            margin-top: 5px; 
+            display: none; 
+        } 
+         
+        .error-border { 
+            border-color: #e74c3c !important; 
+        } 
+         
+        .results-container { 
+            display: none; 
+            margin-top: 30px; 
+            padding: 20px; 
+            background-color: #f8f9fa; 
+            border-radius: 8px; 
+            border-left: 5px solid #00b894; 
+        } 
+         
+        .results-title { 
+            color: #00b894; 
+            font-size: 22px; 
+            margin-bottom: 15px; 
+        } 
+         
+        .result-item { 
+            margin-bottom: 15px; 
+        } 
+         
+        .result-label { 
+            font-weight: bold; 
+            color: #555; 
+        } 
+         
+        .interpretation { 
+            margin-top: 20px; 
+            padding: 15px; 
+            background-color: #e3f2fd; 
+            border-radius: 5px; 
+            font-size: 16px; 
+            line-height: 1.6; 
+        } 
+    </style> 
+</head> 
+<body> 
+    <nav class="navbar navbar-expand-lg navbar-light"> 
+        <div class="navbar-container d-flex justify-content-between"> 
+            <a class="navbar-brand fw-bold" href="#"> 
+                <i class="fas fa-heartbeat"></i> Health Monitor 
+            </a> 
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"> 
+                <span class="navbar-toggler-icon"></span> 
+            </button> 
+            <div class="collapse navbar-collapse" id="navbarNav"> 
+                <ul class="navbar-nav ms-auto"> 
+                    <li class="nav-item"><a class="nav-link" href="user interface project.html">Home</a></li> 
+                    <li class="nav-item"><a class="nav-link" href="chat bot.html">Chatbot</a></li> 
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li> 
+                    <li class="nav-item"><a class="nav-link" href="contact us.html">Contact Us</a></li> 
+                </ul> 
+            </div> 
+        </div> 
+    </nav> 
+     
+    <div class="survey-container"> 
+        <div class="progress-bar"> 
+            <div class="progress" id="progress"></div> 
+        </div> 
+         
+        <h1>Stress & Fatigue Assessment</h1> 
+        <p class="survey-intro">Please answer these questions to help us understand your stress and energy levels.</p> 
+         
+        <form id="healthSurvey"> 
+            <div class="form-group"> 
+                <label>How would you rate your general stress level?</label> 
+                <div class="radio-group"> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="stress-very-low" name="stress_level" value="Very low" required> 
+                        <label for="stress-very-low">Very low</label> 
+                    </div> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="stress-low" name="stress_level" value="Low"> 
+                        <label for="stress-low">Low</label> 
+                    </div> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="stress-moderate" name="stress_level" value="Moderate"> 
+                        <label for="stress-moderate">Moderate</label> 
+                    </div> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="stress-high" name="stress_level" value="High"> 
+                        <label for="stress-high">High</label> 
+                    </div> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="stress-very-high" name="stress_level" value="Very high"> 
+                        <label for="stress-very-high">Very high</label> 
+                    </div> 
+                </div> 
+                <div class="error-message" id="stress-error">Please select your stress level</div> 
+            </div> 
+             
+            <div class="form-group"> 
+                <label>How often do you feel physically tired?</label> 
+                <div class="radio-group"> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="tired-rarely" name="physical_tiredness" value="Rarely" required> 
+                        <label for="tired-rarely">Rarely</label> 
+                    </div> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="tired-sometimes" name="physical_tiredness" value="Sometimes"> 
+                        <label for="tired-sometimes">Sometimes</label> 
+                    </div> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="tired-often" name="physical_tiredness" value="Often"> 
+                        <label for="tired-often">Often</label> 
+                    </div> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="tired-very-often" name="physical_tiredness" value="Very Often"> 
+                        <label for="tired-very-often">Very Often</label> 
+                    </div> 
+                </div> 
+                <div class="error-message" id="physical-tiredness-error">Please select an option</div> 
+            </div> 
+             
+            <div class="form-group"> 
+                <label>How often do you feel mentally exhausted?</label> 
+                <div class="radio-group"> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="mental-rarely" name="mental_exhaustion" value="Rarely" required> 
+                        <label for="mental-rarely">Rarely</label> 
+                    </div> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="mental-sometimes" name="mental_exhaustion" value="Sometimes"> 
+                        <label for="mental-sometimes">Sometimes</label> 
+                    </div> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="mental-often" name="mental_exhaustion" value="Often"> 
+                        <label for="mental-often">Often</label> 
+                    </div> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="mental-very-often" name="mental_exhaustion" value="Very Often"> 
+                        <label for="mental-very-often">Very Often</label> 
+                    </div> 
+                </div> 
+                <div class="error-message" id="mental-exhaustion-error">Please select an option</div> 
+            </div> 
+             
+            <div class="form-group"> 
+                <label>Do you get tired easily when doing physical activities or exercise?</label> 
+                <div class="radio-group"> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="exercise-tired-yes" name="exercise_tiredness" value="Yes" required> 
+                        <label for="exercise-tired-yes">Yes</label> 
+                    </div> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="exercise-tired-no" name="exercise_tiredness" value="No"> 
+                        <label for="exercise-tired-no">No</label> 
+                    </div> 
+                </div> 
+                <div class="error-message" id="exercise-tiredness-error">Please select an option</div> 
+            </div> 
+             
+            <div class="form-group"> 
+                <label>Do you regularly do physical exercise?</label> 
+                <div class="radio-group"> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="exercise-yes" name="exercise" value="Yes" required> 
+                        <label for="exercise-yes">Yes</label> 
+                    </div> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="exercise-no" name="exercise" value="No"> 
+                        <label for="exercise-no">No</label> 
+                    </div> 
+                </div> 
+                <div class="error-message" id="exercise-error">Please select an option</div> 
+                 
+                <div class="conditional-question" id="exercise-frequency"> 
+                    <label for="exercise-days">If yes, how many days per week do you exercise?</label> 
+                    <input type="number" id="exercise-days" name="exercise_days" min="1" max="7"> 
+                    <div class="error-message" id="exercise-days-error">Please enter number of days</div> 
+                </div> 
+            </div> 
+             
+            <div class="form-group"> 
+                <label for="energy-level">On a scale of 1–10, how much energy do you feel during the day? (1 = very low energy, 10 = very high energy)</label> 
+                <input type="number" id="energy-level" name="energy_level" min="1" max="10" required> 
+                <div class="error-message" id="energy-level-error">Please enter your energy level (1-10)</div> 
+            </div> 
+             
+            <div class="button-group"> 
+                <button type="submit" class="predict-btn" id="predict-btn">Predict</button> 
+            </div> 
+        </form> 
+         
+        <div class="results-container" id="results-container"> 
+            <h3 class="results-title">Your Stress & Fatigue Assessment Results</h3> 
+             
+            <div class="result-item"> 
+                <span class="result-label">Stress Level:</span> 
+                <span id="result-stress"></span> 
+            </div> 
+             
+            <div class="result-item"> 
+                <span class="result-label">Physical Tiredness:</span> 
+                <span id="result-physical-tiredness"></span> 
+            </div> 
+             
+            <div class="result-item"> 
+                <span class="result-label">Mental Exhaustion:</span> 
+                <span id="result-mental-exhaustion"></span> 
+            </div> 
+             
+            <div class="result-item"> 
+                <span class="result-label">Exercise Tiredness:</span> 
+                <span id="result-exercise-tiredness"></span> 
+            </div> 
+             
+            <div class="result-item"> 
+                <span class="result-label">Regular Exercise:</span> 
+                <span id="result-exercise"></span> 
+            </div> 
+             
+            <div class="result-item" id="result-exercise-days-container"> 
+                <span class="result-label">Exercise Days per Week:</span> 
+                <span id="result-exercise-days"></span> 
+            </div> 
+             
+            <div class="result-item"> 
+                <span class="result-label">Energy Level:</span> 
+                <span id="result-energy-level"></span> 
+            </div> 
+             
+            <div class="interpretation" id="interpretation"> 
+                <!-- Interpretation will be inserted here by JavaScript --> 
+            </div> 
+        </div> 
+    </div> 
+     
+    <footer style="text-align: center; padding: 15px; background-color: #f8f9fa; color: #6c757d; font-size: 14px; margin-top: 20px;"> 
+        <p>&copy; 2025 Heart Health Assistant. All rights reserved.</p> 
+        <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p> 
+    </footer> 
+     
+<script>
+    document.getElementById("predict-btn").addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const healthData = JSON.parse(localStorage.getItem("surveyPage1Data") || "{}");
+        const medicalHistoryData = JSON.parse(localStorage.getItem("medicalHistoryData") || "{}");
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            alert("Authentication token is missing.");
+            return;
+        }
+
+        if (!healthData || !medicalHistoryData) {
+            alert("Missing data from previous steps.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("Gender", healthData.gender);
+        formData.append("Age", parseInt(healthData.age));
+        formData.append("Smokes", healthData.smokes === "Yes" || healthData.smokes === true);
+        formData.append("CigarettesPerDay", parseInt(healthData.cigarettesPerDay || 0));
+        formData.append("WeightKg", parseFloat(healthData.weightKg));
+        formData.append("HeightCm", parseFloat(healthData.heightCm));
+        formData.append("Diabetes", medicalHistoryData.diabetes === "Yes" || medicalHistoryData.diabetes === true);
+        formData.append("BpMeds", medicalHistoryData.bpMeds === "Yes" || medicalHistoryData.bpMeds === true);
+        formData.append("HeartRate", parseInt(medicalHistoryData.heartRate || 0));
+        formData.append("Glucose", parseInt(medicalHistoryData.glucose || 0));
+        formData.append("Education", healthData.education);
+        formData.append("Cholesterol", medicalHistoryData.cholesterol === "Yes" || medicalHistoryData.cholesterol === true ? 250 : 180);
+
+        // ✅ إضافة الصورة لو موجودة
+        const base64Image = localStorage.getItem("uploadedImageBase64");
+        if (base64Image) {
+            const blob = base64ToBlob(base64Image);
+            formData.append("Image", blob, "profile.png");
+        }
+
+        fetch("https://localhost:7047/api/UserHealth/predict-and-save", {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => { throw new Error(text); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert("✅ Prediction successful!");
+            console.log("Prediction result:", data);
+
+            const resultsContainer = document.getElementById("results-container");
+            resultsContainer.style.display = "block";
+
+            const metrics = data.metrics || {};
+
+            document.getElementById("result-stress").textContent = "N/A";
+
+            document.getElementById("result-physical-tiredness").textContent = metrics.BMI ? `${metrics.BMI.value.toFixed(2)} (${metrics.BMI.status})` : "-";
+            document.getElementById("result-mental-exhaustion").textContent = metrics.Cholesterol ? `${metrics.Cholesterol.value} (${metrics.Cholesterol.status})` : "-";
+            document.getElementById("result-exercise-tiredness").textContent = metrics.Glucose ? `${metrics.Glucose.value} (${metrics.Glucose.status})` : "-";
+            document.getElementById("result-exercise").textContent = metrics["Heart Rate"] ? `${metrics["Heart Rate"].value} (${metrics["Heart Rate"].status})` : "-";
+
+            const exerciseDaysContainer = document.getElementById("result-exercise-days-container");
+            exerciseDaysContainer.style.display = "none";
+            document.getElementById("result-exercise-days").textContent = "-";
+
+            document.getElementById("result-energy-level").textContent = "-";
+
+            let interpretationHtml = "";
+            if (metrics["Systolic BP"]) {
+                interpretationHtml += `<p><strong>Systolic BP:</strong> ${metrics["Systolic BP"].value.toFixed(2)} - ${metrics["Systolic BP"].status} (${metrics["Systolic BP"].recommendation})</p>`;
+            }
+            if (metrics["Diastolic BP"]) {
+                interpretationHtml += `<p><strong>Diastolic BP:</strong> ${metrics["Diastolic BP"].value.toFixed(2)} - ${metrics["Diastolic BP"].status} (${metrics["Diastolic BP"].recommendation})</p>`;
+            }
+            document.getElementById("interpretation").innerHTML = interpretationHtml;
+        })
+        .catch(err => {
+            console.error("❌ Prediction error:", err);
+            alert("Prediction failed:\n" + err.message);
+        });
+    });
+
+    // ✅ لتحويل base64 إلى Blob عشان نقدر نرفقها في FormData
+    function base64ToBlob(base64) {
+        const byteString = atob(base64.split(',')[1]);
+        const mimeString = base64.split(',')[0].split(':')[1].split(';')[0];
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab], { type: mimeString });
+    }
+
+    // 👇 لو عندك راديو خاص بالرياضة
+    const exerciseRadios = document.querySelectorAll('input[name="exercise"]');
+    const exerciseDaysDiv = document.getElementById("exercise-frequency");
+
+    exerciseRadios.forEach(radio => {
+        radio.addEventListener("change", () => {
+            if (radio.value === "Yes" && radio.checked) {
+                exerciseDaysDiv.style.display = "block";
+                document.getElementById("exercise-days").setAttribute("required", "required");
+            } else if (radio.value === "No" && radio.checked) {
+                exerciseDaysDiv.style.display = "none";
+                document.getElementById("exercise-days").removeAttribute("required");
+            }
+        });
+    });
+</script>
+
+</body> 
+</html> 

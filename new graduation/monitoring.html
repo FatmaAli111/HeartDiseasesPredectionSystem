@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Monitor - Device Connection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00b894;
+            --secondary-color: #0984e3;
+            --accent-color: #e17055;
+            --light-color: #f8f9fa;
+            --dark-color: #2d3436;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark-color);
+            background-color: #f5f6fa;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-title {
+            color: var(--dark-color);
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .bluetooth-icon {
+            font-size: 3rem;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--secondary-color);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .device-list {
+            margin: 30px 0;
+        }
+        
+        .device-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+        }
+        
+        .device-status {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .status-green {
+            background-color: #00b894;
+        }
+        
+        .status-yellow {
+            background-color: #fdcb6e;
+        }
+        
+        .status-red {
+            background-color: #d63031;
+        }
+        
+        .btn-connect {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .btn-primary-action {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            display: block;
+            margin: 30px auto;
+            width: 80%;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background-color: rgba(0, 184, 148, 0.2);
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 2s;
+        }
+        
+        .result-card {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .result-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .result-good {
+            color: #00b894;
+        }
+        
+        .chart-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .data-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .data-label {
+            font-weight: 500;
+        }
+        
+        .data-value {
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Step 2: Nearby Devices Screen -->
+    <div class="container" id="searchScreen">
+        <h2 class="section-title">🔍 Search for Nearby Devices</h2>
+        
+        <div class="bluetooth-icon">
+            <i class="fas fa-bluetooth-b"></i>
+        </div>
+        
+        <p class="text-center">Searching for available devices...</p>
+        
+        <div class="device-list" id="deviceList" style="display: none;">
+            <div class="device-item">
+                <div>
+                    <span class="device-status status-green"></span>
+                    <span>Galaxy Watch 6</span>
+                </div>
+                <button class="btn-connect" onclick="connectDevice()">Connect</button>
+            </div>
+            <div class="device-item">
+                <div>
+                    <span class="device-status status-yellow"></span>
+                    <span>Amazfit GTS 4 Mini</span>
+                </div>
+                <button class="btn-connect" onclick="connectDevice()">Connect</button>
+            </div>
+            <div class="device-item">
+                <div>
+                    <span class="device-status status-red"></span>
+                    <span>Apple Watch SE</span>
+                </div>
+                <button class="btn-connect" onclick="connectDevice()">Connect</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Step 3: Connection Success Screen -->
+    <div class="container" id="successScreen" style="display: none;">
+        <h2 class="section-title">🎉 Your watch is connected!</h2>
+        
+        <p class="text-center">We can now collect the following data from your watch:</p>
+        
+        <div class="data-item">
+            <span class="data-label">✅ Blood Pressure</span>
+        </div>
+        <div class="data-item">
+            <span class="data-label">✅ Maximum Heart Rate</span>
+        </div>
+        <div class="data-item">
+            <span class="data-label">✅ Resting Heart ECG</span>
+        </div>
+        
+        <button class="btn-primary-action" onclick="startAnalysis()">
+            Start Health Analysis
+        </button>
+    </div>
+    
+    <!-- Step 4: Data Import Screen -->
+    <div class="container" id="importScreen" style="display: none;">
+        <h2 class="section-title">Importing Your Data</h2>
+        
+        <div class="text-center">
+            <i class="fas fa-cloud-download-alt" style="font-size: 3rem; color: var(--secondary-color); margin: 20px 0;"></i>
+            <p>Importing your data from the watch...</p>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Step 5: Initial Analysis Screen -->
+    <div class="container" id="analysisScreen" style="display: none;">
+        <h2 class="section-title">🧠 Initial Health Analysis</h2>
+        
+        <div class="chart-container">
+            <canvas id="healthChart"></canvas>
+        </div>
+        
+        <div class="result-card">
+            <div class="result-icon result-good">
+                <i class="fas fa-heartbeat"></i>
+            </div>
+            <h4>Low probability of heart disease</h4>
+            <p>Your vital data is within normal range</p>
+        </div>
+        
+        <p class="text-center">💡 Continue with daily monitoring for more accurate predictions.</p>
+        
+        <button class="btn-primary-action" onclick="setupReminder()">
+            Set Daily Reminder
+        </button>
+    </div>
+    
+    <!-- Step 6: Reminder Setup Screen -->
+    <div class="container" id="reminderScreen" style="display: none;">
+        <h2 class="section-title">📅 Set Daily Reminder</h2>
+        
+        <p class="text-center">Select the best time for your daily health check:</p>
+        
+        <div class="mb-3">
+            <label for="reminderTime" class="form-label">Reminder Time</label>
+            <input type="time" class="form-control" id="reminderTime" value="08:00">
+        </div>
+        
+        <button class="btn-primary-action" onclick="completeSetup()">
+            Confirm Reminder
+        </button>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Simulate device search
+            setTimeout(function() {
+                $('#deviceList').fadeIn();
+            }, 2000);
+        });
+        
+        function connectDevice() {
+            $('#searchScreen').fadeOut(function() {
+                $('#successScreen').fadeIn();
+            });
+        }
+        
+        function startAnalysis() {
+            $('#successScreen').fadeOut(function() {
+                $('#importScreen').fadeIn();
+                
+                // Animate progress bar
+                $('#progressFill').css('width', '100%');
+                
+                // After import completes, show analysis
+                setTimeout(function() {
+                    $('#importScreen').fadeOut(function() {
+                        $('#analysisScreen').fadeIn();
+                        drawHealthChart();
+                    });
+                }, 2500);
+            });
+        }
+        
+        function drawHealthChart() {
+            const ctx = document.getElementById('healthChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Blood Pressure', 'Max Heart Rate', 'Resting HR', 'HR Variability'],
+                    datasets: [{
+                        label: 'Your Data',
+                        data: [118, 145, 68, 32],
+                        backgroundColor: [
+                            'rgba(0, 184, 148, 0.7)',
+                            'rgba(9, 132, 227, 0.7)',
+                            'rgba(233, 30, 99, 0.7)',
+                            'rgba(255, 193, 7, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(0, 184, 148, 1)',
+                            'rgba(9, 132, 227, 1)',
+                            'rgba(233, 30, 99, 1)',
+                            'rgba(255, 193, 7, 1)'
+                        ],
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Normal Range',
+                        data: [120, 150, 60, 30],
+                        backgroundColor: 'rgba(200, 200, 200, 0.5)',
+                        borderColor: 'rgba(150, 150, 150, 1)',
+                        borderWidth: 1,
+                        type: 'line',
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        function setupReminder() {
+            $('#analysisScreen').fadeOut(function() {
+                $('#reminderScreen').fadeIn();
+            });
+        }
+        
+        function completeSetup() {
+            alert('Daily reminder set successfully!');
+            // Here you would typically save the reminder time to the backend
+        }
+    </script>
+</body>
+</html>
+
+
+

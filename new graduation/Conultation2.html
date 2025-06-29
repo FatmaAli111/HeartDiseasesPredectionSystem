@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Monitor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00b894;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Navigation Bar - Matched exactly to first example */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+        }
+        
+        .navbar-brand {
+            color: var(--primary-color) !important;
+            font-weight: bold;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand i {
+            font-size: 1.8rem;
+            margin-right: 10px;
+        }
+        
+        .navbar-nav .nav-link {
+            font-size: 18px;
+            margin-left: 15px;
+            color: black;
+            font-weight: bold;
+            transition: color 0.3s, transform 0.3s;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+        
+        /* Rest of your existing styles */
+        .main-content {
+            padding: 30px;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .chat-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .message {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .message.sent {
+            justify-content: flex-end;
+        }
+        
+        .message .bubble {
+            padding: 12px 18px;
+            border-radius: 18px;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+        
+        .message.received .bubble {
+            background: #e9ecef;
+        }
+        
+        .message.sent .bubble {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .file-message {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+        
+        .file-icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .file-name {
+            font-weight: bold;
+        }
+        
+        .file-size {
+            font-size: 12px;
+            color: #666;
+            margin-left: 5px;
+        }
+        
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .calendar-table th, .calendar-table td {
+            border: 1px solid #ddd;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+        }
+        
+        .calendar-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .calendar-table td:hover {
+            background-color: #e9ecef;
+        }
+        
+        .doctor-card {
+            text-align: center;
+        }
+        
+        .doctor-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+        }
+        
+        .badge-available {
+            background-color: var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 20px;
+            color: white;
+            font-size: 14px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+            
+            .navbar-brand i {
+                font-size: 1.5rem;
+            }
+            
+            .navbar-nav .nav-link {
+                font-size: 16px;
+                margin-left: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar - Matched to first example -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-heartbeat"></i> Health Monitor
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="user interface project.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="chat bot.html">Chatbot</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact us.html">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="content-card">
+                    <h3><i class="fas fa-comments"></i> Consultation</h3>
+                    <div class="chat-box" id="chatContainer">
+                        <div class="message received">
+                            <div class="bubble">Hello, Doctor! I have a few questions about my recent health checkup.</div>
+                        </div>
+                        <div class="message sent">
+                            <div class="bubble">Hello! I'm here to help. Please go ahead with your questions.</div>
+                        </div>
+                    </div>
+                    <div class="input-group mt-3">
+                        <input type="text" class="form-control" id="messageInput" placeholder="Type your message...">
+                        <input type="file" id="fileInput" style="display: none;" accept=".doc,.docx,.pdf,.jpg,.jpeg,.png">
+                        <button class="btn btn-secondary" id="attachBtn">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <button class="btn" id="sendBtn" style="background-color: var(--primary-color); color: white;">Send</button>
+                    </div>
+                </div>
+            </div>
+            
+          
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+    
+$(document).ready(function () {
+    // استخراج receiverId من الرابط أو localStorage
+    const urlParams = new URLSearchParams(window.location.search);
+    const patientIdFromUrl = urlParams.get('patientId');
+    if (patientIdFromUrl) {
+        localStorage.setItem('receiverId', patientIdFromUrl);
+    }
+
+    const chatContainer = $('#chatContainer');
+    const messageInput = $('#messageInput');
+    const receiverId = localStorage.getItem('receiverId');
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+
+    // دالة تحميل الرسائل
+    function loadMessages() {
+        if (!userId || !receiverId || !token) {
+            console.warn("Missing userId, receiverId or token");
+            return;
+        }
+
+        $.ajax({
+            url: `https://localhost:7047/api/DoctorPatientChat/conversation?user2Id=${receiverId}`,
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function (messages) {
+                chatContainer.empty();
+                messages.forEach(msg => {
+                    const messageDiv = $('<div class="message"></div>');
+                    const bubbleDiv = $('<div class="bubble"></div>').text(msg.content);
+
+                    if (msg.senderId.toLowerCase() === userId.toLowerCase()) {
+                        messageDiv.addClass('sent');
+                    } else {
+                        messageDiv.addClass('received');
+                    }
+
+                    messageDiv.append(bubbleDiv);
+                    chatContainer.append(messageDiv);
+                });
+                chatContainer.scrollTop(chatContainer[0].scrollHeight);
+            },
+            error: function (err) {
+                console.error("Error loading conversation:", err);
+            }
+        });
+    }
+
+    // تحميل الرسائل عند بداية الصفحة
+    loadMessages();
+
+    // تحديث الرسائل كل 3 ثواني
+    setInterval(loadMessages, 3000);
+
+    // دالة إرسال رسالة
+    function sendMessage() {
+        const messageText = messageInput.val().trim();
+
+        if (!messageText) {
+            alert("Message cannot be empty.");
+            return;
+        }
+
+        if (!receiverId || !token) {
+            alert("Receiver or token is missing.");
+            return;
+        }
+
+        const payload = {
+            content: messageText,
+            receiverId: receiverId
+        };
+
+        $.ajax({
+            url: 'https://localhost:7047/api/DoctorPatientChat/send',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(payload),
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function () {
+                messageInput.val('');
+                loadMessages(); // تحديث المحادثة فوراً بعد الإرسال
+            },
+            error: function (err) {
+                alert('Error sending message. Please try again.');
+                console.error(err);
+            }
+        });
+    }
+
+    // إرسال عند الضغط على زر الإرسال
+    $('#sendBtn').on('click', sendMessage);
+
+    // إرسال عند الضغط على Enter بدون Shift
+    messageInput.on('keypress', function (e) {
+        if (e.which === 13 && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    // زرار الإرفاق
+    $('#attachBtn').on('click', function () {
+        $('#fileInput').click();
+    });
+
+    // تحميل المواعيد القادمة
+    function loadAppointments() {
+        if (!userId || !token) {
+            return;
+        }
+        $.ajax({
+            url: `https://localhost:7047/api/Appointment/upcoming/${userId}`,
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function (appointments) {
+                const container = $('#appointmentsList');
+                container.empty();
+                if (appointments.length === 0) {
+                    container.html('<p>No upcoming appointments found.</p>');
+                    return;
+                }
+                const list = $('<ul class="list-group"></ul>');
+                appointments.forEach(app => {
+                    const date = new Date(app.date).toLocaleDateString();
+                    const time = app.time;
+                    list.append(`<li class="list-group-item">${date} - ${time}</li>`);
+                });
+                container.append(list);
+            },
+            error: function (err) {
+                console.error("Error fetching appointments:", err);
+            }
+        });
+    }
+
+    // تحميل المواعيد عند بداية الصفحة
+    loadAppointments();
+
+    // حجز موعد جديد
+    $('#bookAppointmentBtn').on('click', function () {
+        const date = $('#appointmentDate').val();
+        const time = $('#appointmentTime').val();
+        if (!date || !time) {
+            alert("Please enter both date and time.");
+            return;
+        }
+        const doctorId = receiverId;
+        const payload = {
+            doctorId: doctorId,
+            date: date,
+            time: time
+        };
+        $.ajax({
+            url: 'https://localhost:7047/api/Appointment/schedule',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(payload),
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function () {
+                alert("Appointment booked successfully!");
+                loadAppointments(); // إعادة تحميل المواعيد بعد الحجز بدل إعادة تحميل الصفحة
+            },
+            error: function (err) {
+                alert("Failed to book appointment. Please choose a different time.");
+                console.error(err);
+            }
+        });
+    });
+});
+</script>
+
+</body>
+
+</html>

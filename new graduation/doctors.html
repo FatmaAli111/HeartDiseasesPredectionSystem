@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Monitor - Cardiology Specialists</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 18px;
+            margin-left: 15px;
+            transition: color 0.3s, transform 0.3s;
+            color: black;
+            font-weight: bold;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #00b894;
+            transform: scale(1.1);
+        }
+        
+        .navbar-brand {
+            color: #00b894 !important;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .navbar-brand i {
+            font-size: 1.8rem;
+            margin-right: 10px;
+            vertical-align: middle;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .navbar-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0 15px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 30px auto;
+            padding: 0 40px;
+        }
+        
+        h2 {
+            color: #00b894;
+            text-align: center;
+            margin-bottom: 40px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 2.5rem;
+        }
+        
+        .stats {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 50px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stats h3 {
+            color: #00b894;
+            margin-top: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 2rem;
+        }
+        
+        .doctor-count {
+            font-size: 32px;
+            font-weight: bold;
+            color: #00b894;
+        }
+        
+        .doctors-list {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+        }
+        
+        .doctor-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center;
+            min-height: 350px;
+        }
+        
+        .doctor-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+        }
+        
+        .doctor-image-container {
+            flex: 0 0 250px;
+            height: 250px;
+            overflow: hidden;
+            border-radius: 50%;
+            margin: 20px;
+            border: 5px solid #00b894;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .doctor-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .doctor-card:hover .doctor-image {
+            transform: scale(1.05);
+        }
+        
+        .doctor-info {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .doctor-name {
+            color: #00b894;
+            margin: 0 0 15px;
+            font-size: 28px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .doctor-specialty {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 500;
+        }
+        
+        .doctor-bio {
+            margin-bottom: 25px;
+            font-size: 17px;
+            line-height: 1.7;
+            color: #444;
+        }
+        
+        .doctor-details {
+            margin-bottom: 25px;
+            font-size: 16px;
+            color: #555;
+        }
+        
+        .doctor-details span {
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .doctor-details i {
+            color: #00b894;
+            margin-right: 10px;
+            width: 22px;
+            text-align: center;
+        }
+        
+        .view-profile {
+            display: inline-block;
+            background-color: #00b894;
+            color: white;
+            padding: 14px 35px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 17px;
+            align-self: flex-start;
+        }
+        
+        .view-profile:hover {
+            background-color: #00997b;
+            transform: translateY(-2px);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px;
+            background-color: #f8f9fa;
+            color: #6c757d;
+            font-size: 16px;
+            margin-top: 80px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .footer-links {
+            margin-bottom: 25px;
+        }
+        
+        .footer-links a {
+            color: #6c757d;
+            margin: 0 20px;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 16px;
+        }
+        
+        .footer-links a:hover {
+            color: #00b894;
+        }
+        
+        @media (max-width: 1200px) {
+            .doctor-image-container {
+                flex: 0 0 220px;
+                height: 220px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .doctor-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .doctor-image-container {
+                flex: 0 0 200px;
+                height: 200px;
+                margin: 30px auto 20px;
+            }
+            
+            .doctor-info {
+                padding: 30px;
+                align-items: center;
+            }
+            
+            .container {
+                padding: 0 30px;
+            }
+            
+            .view-profile {
+                align-self: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .doctor-image-container {
+                flex: 0 0 180px;
+                height: 180px;
+            }
+            
+            .doctor-name {
+                font-size: 24px;
+            }
+            
+            .doctor-specialty {
+                font-size: 18px;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="navbar-container d-flex justify-content-between">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-heartbeat"></i> Health Monitor
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="user interface project.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="chat bot.html">Chatbot</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact us.html">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="stats">
+            <h3>Cardiology Team</h3>
+            <p>We have <span class="doctor-count"></span> specialized cardiologists ready to serve you</p>
+        </div>
+        
+        <h2>Our Cardiology Specialists</h2>
+        
+        <div class="doctors-list">
+            <!-- Cardiologist 1 -->
+            <div class="doctor-card">
+                <div class="doctor-image-container">
+                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Dr. Michael Johnson" class="doctor-image">
+                </div>
+                <div class="doctor-info">
+                    <h3 class="doctor-name">Dr. Michael Johnson</h3>
+                    <p class="doctor-specialty">Interventional Cardiologist</p>
+                    <p class="doctor-bio">Specializing in cardiac catheterization and stent placement with over 20 years of experience. Dr. Johnson has performed more than 5,000 successful cardiac procedures and is recognized as a leader in minimally invasive techniques.</p>
+                    <div class="doctor-details">
+                        <span><i class="fas fa-graduation-cap"></i> Harvard Medical School</span>
+                        <span><i class="fas fa-award"></i> Board Certified in Interventional Cardiology</span>
+                        <span><i class="fas fa-map-marker-alt"></i> Available at: Main Hospital, Downtown Clinic</span>
+                    </div>
+                    <a href="conultation.html" class="view-profile">Book Consultation</a>
+                </div>
+            </div>
+            
+            <!-- Cardiologist 2 -->
+            <div class="doctor-card">
+                <div class="doctor-image-container">
+                    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Dr. Sarah Williams" class="doctor-image">
+                </div>
+                <div class="doctor-info">
+                    <h3 class="doctor-name">Dr. Sarah Williams</h3>
+                    <p class="doctor-specialty">Electrophysiologist</p>
+                    <p class="doctor-bio">Expert in heart rhythm disorders and pacemaker implantation. Dr. Williams has published numerous research papers on arrhythmia management and leads our cardiac electrophysiology program with over 15 years of clinical experience.</p>
+                    <div class="doctor-details">
+                        <span><i class="fas fa-graduation-cap"></i> Johns Hopkins University</span>
+                        <span><i class="fas fa-award"></i> Fellow of the Heart Rhythm Society</span>
+                        <span><i class="fas fa-map-marker-alt"></i> Available at: Heart Center, Northside Clinic</span>
+                    </div>
+                    <a href="conultation.html" class="view-profile">Book Consultation</a>
+                </div>
+            </div>
+            
+            <!-- Cardiologist 3 -->
+            <div class="doctor-card">
+                <div class="doctor-image-container">
+                    <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Dr. Robert Chen" class="doctor-image">
+                </div>
+                <div class="doctor-info">
+                    <h3 class="doctor-name">Dr. Robert Chen</h3>
+                    <p class="doctor-specialty">Pediatric Cardiologist</p>
+                    <p class="doctor-bio">Specializing in congenital heart defects in children and newborns. Dr. Chen has developed innovative treatment protocols for complex pediatric heart conditions and leads our pediatric cardiology department with compassion and expertise.</p>
+                    <div class="doctor-details">
+                        <span><i class="fas fa-graduation-cap"></i> Stanford University School of Medicine</span>
+                        <span><i class="fas fa-award"></i> Board Certified in Pediatric Cardiology</span>
+                        <span><i class="fas fa-map-marker-alt"></i> Available at: Children's Hospital</span>
+                    </div>
+                    <a href="conultation.html" class="view-profile">Book Consultation</a>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Careers</a>
+            <a href="#">Contact Us</a>
+        </div>
+        <p>&copy; 2025 Heart Health Assistant. All rights reserved.</p>
+    </footer>
+<script> 
+    document.addEventListener('DOMContentLoaded', function () { 
+        fetch('https://localhost:7047/api/Doctors/GetAllDoctors') 
+            .then(response => response.json()) 
+            .then(data => { 
+                const doctors = data.doctors || []; 
+                const container = document.querySelector('.doctors-list'); 
+                const countElement = document.querySelector('.doctor-count'); 
+ 
+                countElement.textContent = doctors.length; 
+                container.innerHTML = ''; // امسح البيانات القديمة 
+ 
+                doctors.forEach(doc => { 
+                    const card = document.createElement('div'); 
+                    card.className = 'doctor-card'; 
+ 
+                    card.innerHTML = ` 
+                        <div class="doctor-image-container"> 
+                            <img src="${doc.image || 'https://via.placeholder.com/250'}" alt="${doc.name}" class="doctor-image"> 
+                        </div> 
+                        <div class="doctor-info"> 
+                            <h3 class="doctor-name">${doc.name}</h3> 
+                            <p class="doctor-specialty">${doc.speciality || 'Specialty not available'}</p> 
+                            <p class="doctor-bio">${doc.description || 'No description provided.'}</p> 
+                            <div class="doctor-details"> 
+                                <span><i class="fas fa-briefcase-medical"></i> Experience: ${doc.yearsOfEx || 'N/A'} years</span> 
+                                <span><i class="fas fa-map-marker-alt"></i> Address: ${doc.address || 'N/A'}</span> 
+                            </div> 
+                            <button class="view-profile btn btn-success" data-id="${doc.id}">Book Consultation</button> 
+                        </div> 
+                    `; 
+ 
+                    container.appendChild(card); 
+                }); 
+ 
+                // إضافة الحدث لكل زر بعد إنشائه
+                document.querySelectorAll('.view-profile').forEach(btn => {
+                    btn.addEventListener('click', function () {
+                        const receiverId = this.getAttribute('data-id');
+                        localStorage.setItem('receiverId', receiverId);
+                        window.location.href = 'conultation.html';
+                    });
+                });
+
+            }) 
+            .catch(error => { 
+                console.error('Error fetching doctors:', error); 
+                document.querySelector('.doctor-count').textContent = '0'; 
+                document.querySelector('.doctors-list').innerHTML = '<p class="text-danger">Failed to load doctors.</p>'; 
+            }); 
+    }); 
+</script>
+
+
+</body>
+</html>

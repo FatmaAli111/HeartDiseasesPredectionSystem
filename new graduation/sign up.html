@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #00b894;
+      --primary-light: #55efc4;
+      --primary-dark: #00806b;
+    }
+
+    body {
+      background: url('photo/6463.jpg_wh860.jpg') no-repeat center center/cover;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .signup-container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      max-width: 380px;
+      width: 90%;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    .btn-signup {
+      background-color: var(--primary-color);
+      color: white;
+      width: 100%;
+      font-size: 1rem;
+      padding: 10px;
+      margin-top: 10px;
+      border: none;
+      transition: background-color 0.3s;
+    }
+
+    .btn-signup:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .password-rules {
+      font-size: 13px;
+      color: var(--primary-color);
+      margin-top: 5px;
+    }
+
+    .input-group-text {
+      cursor: pointer;
+      background-color: #f8f9fa;
+      padding: 0 12px;
+    }
+
+    .form-control {
+      padding: 10px 15px;
+      font-size: 0.95rem;
+    }
+
+    .form-label {
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+    }
+
+    h2.text-center {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: var(--primary-dark);
+    }
+
+    .role-selection {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .role-btn {
+      flex: 1;
+      margin: 0 5px;
+      padding: 10px;
+      border: 2px solid var(--primary-color);
+      background: white;
+      color: var(--primary-color);
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+
+    .role-btn.active {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .role-btn:hover:not(.active) {
+      background-color: rgba(0, 184, 148, 0.1);
+    }
+
+    .error-message {
+      color: red;
+      font-size: 0.8rem;
+      margin-top: 5px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <h2 class="text-center">Sign Up</h2>
+    <form id="signupForm">
+      <div class="mb-3">
+        <label class="form-label">User Name</label>
+        <input type="text" id="userName" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Full Name</label>
+        <input type="text" id="fullName" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" id="email" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Phone Number</label>
+        <input type="text" id="phone" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Address</label>
+        <input type="text" id="address" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <div class="input-group">
+          <input type="password" class="form-control" id="password" required>
+          <span class="input-group-text" onclick="togglePassword('password')">
+            <i class="fas fa-eye"></i>
+          </span>
+        </div>
+        <p class="password-rules"></p>
+        <div class="error-message" id="passwordError"></div>
+      </div>
+
+      <div class="role-selection">
+        <button type="button" class="role-btn" id="patientBtn">Patient</button>
+        <button type="button" class="role-btn" id="doctorBtn">Doctor</button>
+      </div>
+      <input type="hidden" id="userRole" name="userRole" value="">
+
+      <button type="submit" class="btn btn-signup">Sign Up</button>
+    </form>
+  </div>
+
+  <script>
+    function togglePassword(id) {
+      let input = document.getElementById(id);
+      let icon = input.nextElementSibling.querySelector('i');
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = "password";
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    const patientBtn = document.getElementById('patientBtn');
+    const doctorBtn = document.getElementById('doctorBtn');
+    const userRole = document.getElementById('userRole');
+
+    patientBtn.addEventListener('click', function () {
+      patientBtn.classList.add('active');
+      doctorBtn.classList.remove('active');
+      userRole.value = 'patient';
+    });
+
+    doctorBtn.addEventListener('click', function () {
+      doctorBtn.classList.add('active');
+      patientBtn.classList.remove('active');
+      userRole.value = 'doctor';
+    });
+
+    const passwordInput = document.getElementById('password');
+    const passwordError = document.getElementById('passwordError');
+    const signupForm = document.getElementById('signupForm');
+
+    function validatePassword(password) {
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*_)[A-Za-z\d_]{8,}$/;
+      return regex.test(password);
+    }
+
+    signupForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      passwordError.style.display = 'none';
+      const password = passwordInput.value;
+      const role = userRole.value;
+
+      if (!validatePassword(password)) {
+        passwordError.textContent = 'Password must contain at least 8 characters with uppercase, lowercase, number, and underscore';
+        passwordError.style.display = 'block';
+        return;
+      }
+
+      if (!role) {
+        alert('Please select your role (Patient or Doctor)');
+        return;
+      }
+
+      const formData = {
+        userName: document.getElementById('userName').value.trim(),
+        name: document.getElementById('fullName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        password: password,
+        roles: [role === 'patient' ? 'Patient' : 'Doctor']
+      };
+
+      fetch('https://localhost:7047/api/AuthUser/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+        .then(response => {
+          if (!response.ok) {
+            return response.json().then(data => {
+              throw new Error(data.message || "Registration failed");
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+          alert('Registered Successfly');
+          //if (role === 'patient') {
+            window.location.href = 'user interface project.html';
+         // } else {
+          //}
+        })
+        .catch(error => {
+          alert("Registration error: " + error.message);
+        });
+    });
+  </script>
+</body>
+</html>

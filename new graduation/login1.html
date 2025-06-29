@@ -1,0 +1,291 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Health Monitor - Login</title> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
+    <style> 
+        :root { 
+            --primary-color: #00b894; 
+        } 
+ 
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        } 
+ 
+        body { 
+            height: 100vh; 
+            overflow: auto; 
+            display: flex; 
+            flex-direction: column; 
+            background-color: #f8f9fa; 
+        } 
+ 
+        .main-content { 
+            display: flex; 
+            height: 100vh; 
+        } 
+ 
+        .form-section { 
+            flex: 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px; 
+        } 
+ 
+        .image-section { 
+            flex: 1; 
+            background: url("photo/login.png") no-repeat center center; 
+            background-size: cover; 
+            margin-right: 40px; 
+        } 
+ 
+        .login-card { 
+            background-color: white; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
+            width: 100%; 
+            max-width: 400px; 
+            padding: 40px; 
+            text-align: center; 
+            animation: fadeIn 0.5s ease-out; 
+        } 
+ 
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        } 
+ 
+        .login-title { 
+            color: #333; 
+            margin-bottom: 30px; 
+            font-size: 1.8rem; 
+        } 
+ 
+        .input-group { 
+            position: relative; 
+            margin-bottom: 25px; 
+        } 
+ 
+        .input-group i:first-child { 
+            position: absolute; 
+            left: 15px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            color: var(--primary-color); 
+        } 
+ 
+        .input-group i.toggle-password { 
+            position: absolute; 
+            right: 15px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            color: #777; 
+            cursor: pointer; 
+            transition: color 0.3s; 
+        } 
+ 
+        .input-group i.toggle-password:hover { 
+            color: var(--primary-color); 
+        } 
+ 
+        .form-control { 
+            width: 100%; 
+            padding: 12px 40px 12px 40px; 
+            border: 2px solid #ddd; 
+            border-radius: 8px; 
+            font-size: 1rem; 
+            transition: border-color 0.3s; 
+        } 
+ 
+        .form-control:focus { 
+            border-color: var(--primary-color); 
+            outline: none; 
+        } 
+ 
+        .btn-submit { 
+            background-color: var(--primary-color); 
+            color: white; 
+            border: none; 
+            padding: 12px 0; 
+            width: 100%; 
+            border-radius: 8px; 
+            font-size: 1rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: background-color 0.3s; 
+            margin-top: 10px; 
+        } 
+ 
+        .btn-submit:hover { 
+            background-color: #00997b; 
+        } 
+ 
+        .login-footer { 
+            margin-top: 20px; 
+            font-size: 0.9rem; 
+            color: #666; 
+        } 
+ 
+        .login-footer a { 
+            color: var(--primary-color); 
+            text-decoration: none; 
+            font-weight: 500; 
+        } 
+ 
+        .error-message { 
+            color: #e74c3c; 
+            font-size: 0.8rem; 
+            margin-top: 5px; 
+            text-align: left; 
+            display: none; 
+        } 
+ 
+        @media (max-width: 768px) { 
+            .login-card { 
+                padding: 30px 20px; 
+                margin: 0 15px; 
+            } 
+ 
+            .main-content { 
+                flex-direction: column; 
+            } 
+ 
+            .image-section { 
+                display: none; 
+            } 
+        } 
+    </style> 
+</head> 
+<body> 
+<main class="main-content"> 
+    <div class="form-section"> 
+        <div class="login-card"> 
+            <h1 class="login-title">Welcome Back</h1> 
+ 
+            <form id="loginForm"> 
+                <div class="input-group"> 
+                    <i class="fas fa-user"></i> 
+                    <input type="text" id="username" class="form-control" placeholder="Username" required> 
+                    <div class="error-message" id="usernameError"></div> 
+                </div> 
+ 
+                <div class="input-group"> 
+                    <i class="fas fa-lock"></i> 
+                    <input type="password" id="password" class="form-control" placeholder="Password" required> 
+                    <i class="fas fa-eye toggle-password" id="togglePassword"></i> 
+                    <div class="error-message" id="passwordError"></div> 
+                </div> 
+ 
+                <button type="submit" class="btn-submit">Login</button> 
+ 
+                <div class="login-footer"> 
+                    <a href="forget password.html">Forgot your password?</a> 
+                </div> 
+            </form> 
+        </div> 
+    </div> 
+ 
+    <div class="image-section"></div> 
+</main> 
+ 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+<script> 
+    const togglePassword = document.querySelector('#togglePassword'); 
+    const password = document.querySelector('#password'); 
+ 
+    togglePassword.addEventListener('click', function () { 
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password'; 
+        password.setAttribute('type', type); 
+        this.classList.toggle('fa-eye-slash'); 
+    }); 
+ 
+    const loginForm = document.getElementById('loginForm'); 
+    const usernameInput = document.getElementById('username'); 
+    const passwordInput = document.getElementById('password'); 
+    const usernameError = document.getElementById('usernameError'); 
+    const passwordError = document.getElementById('passwordError'); 
+ 
+    loginForm.addEventListener('submit', async function (e) { 
+        e.preventDefault(); 
+ 
+        usernameError.style.display = 'none'; 
+        passwordError.style.display = 'none'; 
+ 
+        const username = usernameInput.value.trim(); 
+        const pass = passwordInput.value.trim(); 
+ 
+        if (!username) { 
+            usernameError.textContent = 'Username is required'; 
+            usernameError.style.display = 'block'; 
+            return; 
+        } 
+ 
+        if (!pass) { 
+            passwordError.textContent = 'Password is required'; 
+            passwordError.style.display = 'block'; 
+            return; 
+        } 
+ 
+        try { 
+            const response = await fetch('https://localhost:7047/api/AuthUser/login', { 
+                method: 'POST', 
+                headers: { 
+                    'Content-Type': 'application/json' 
+                }, 
+                body: JSON.stringify({ 
+                    username: username, 
+                    password: pass 
+                }) 
+            }); 
+ 
+            if (response.ok) { 
+                const data = await response.json();
+                
+                    //console.log("Received data from API:", data); // ✅ هنا مكانه الصح
+
+                const token = data.token; 
+                 const payload = JSON.parse(atob(token.split('.')[1]));
+                const role = payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+ 
+                alert('Login successful!'); 
+                localStorage.setItem('token', token);
+                    localStorage.setItem('role', role); // ✅ أهو هنا حل المشكلة
+ 
+ // استخراج userId من التوكن
+
+if (token) {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const userId = payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+    localStorage.setItem("userId", userId);
+}
+
+                  // if (role === 'patient') { 
+                    window.location.href = 'user interface project.html'; 
+                //} else if (role === 'doctor') { 
+                   //window.location.href = 'doctor-dashboard.html'; 
+               //} else { 
+                   // alert('Unknown role!'); 
+                //} 
+            } else { 
+                const errorData = await response.json(); 
+                passwordError.textContent = errorData.message || 'Invalid username or password'; 
+                passwordError.style.display = 'block'; 
+            } 
+        } catch (err) { 
+            console.error(err); 
+            passwordError.textContent = 'Server error. Please try again later.'; 
+            passwordError.style.display = 'block'; 
+        } 
+    }); 
+</script> 
+ 
+</body> 
+</html>  

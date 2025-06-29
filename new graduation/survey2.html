@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Monitor - Medical History</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #333;
+        }
+        
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 18px;
+            margin-left: 15px;
+            transition: color 0.3s, transform 0.3s;
+            color: black;
+            font-weight: bold;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #00b894;
+            transform: scale(1.1);
+        }
+        
+        .navbar-brand {
+            color: #00b894 !important;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .navbar-brand i {
+            font-size: 1.8rem;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        /* Custom container for navbar to match width */
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0 15px;
+        }
+        
+        .survey-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        h1 {
+            color: #00b894;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .survey-intro {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #666;
+            font-size: 18px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            border-color: #00b894;
+            outline: none;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+        }
+        
+        .radio-option input {
+            margin-right: 8px;
+        }
+        
+        .conditional-question {
+            margin-top: 15px;
+            margin-left: 20px;
+            padding-left: 20px;
+            border-left: 3px solid #eee;
+            display: none;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        
+        button {
+            background-color: #00b894;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #00a884;
+        }
+        
+        .back-btn {
+            background-color: #636e72;
+        }
+        
+        .back-btn:hover {
+            background-color: #2d3436;
+        }
+        
+        .next-btn {
+            background-color: #00b894; 
+        }
+        
+        .next-btn:hover {
+            background-color: #00b894; 
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: #00b894;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .error-border {
+            border-color: #e74c3c !important;
+        }
+        
+        .radio-group-error {
+            outline: 2px solid #e74c3c;
+            padding: 5px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="navbar-container d-flex justify-content-between">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-heartbeat"></i> Health Monitor
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="user interface project.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="chat bot.html">Chatbot</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact us.html">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="survey-container">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        
+        <h1>Medical History</h1>
+        <p class="survey-intro">Please provide your medical history information to help us better understand your health needs.</p>
+        
+        <form id="medicalHistory">
+            <div class="form-group">
+                <label>Do you have diabetes?</label>
+                <div class="radio-group" id="diabetes-group">
+                    <div class="radio-option">
+                        <input type="radio" id="diabetes-yes" name="diabetes" value="Yes" required>
+                        <label for="diabetes-yes">Yes</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="diabetes-no" name="diabetes" value="No">
+                        <label for="diabetes-no">No</label>
+                    </div>
+                </div>
+                <div class="error-message" id="diabetes-error">Please select an option</div>
+            </div>
+            
+            <div class="form-group">
+                <label>Do you take any medications for high blood pressure?</label>
+                <div class="radio-group" id="bp-meds-group">
+                    <div class="radio-option">
+                        <input type="radio" id="bp-meds-yes" name="bp_meds" value="Yes" required>
+                        <label for="bp-meds-yes">Yes</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="bp-meds-no" name="bp_meds" value="No">
+                        <label for="bp-meds-no">No</label>
+                    </div>
+                </div>
+                <div class="error-message" id="bp-meds-error">Please select an option</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="heart-rate">What is your average heart rate (bpm)?</label>
+                <input type="number" id="heart-rate" name="heart_rate" min="30" max="200" required>
+                <div class="error-message" id="heart-rate-error">Please enter your average heart rate</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="glucose-level">What is your average glucose level (mg/dL)?</label>
+                <input type="number" id="glucose-level" name="glucose_level" min="50" max="500" required>
+                <div class="error-message" id="glucose-level-error">Please enter your average glucose level</div>
+            </div>
+            
+            <div class="form-group">
+                <label>Have you ever been diagnosed with high systolic blood pressure?</label>
+                <div class="radio-group" id="systolic-bp-group">
+                    <div class="radio-option">
+                        <input type="radio" id="systolic-yes" name="systolic_bp" value="Yes" required>
+                        <label for="systolic-yes">Yes</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="systolic-no" name="systolic_bp" value="No">
+                        <label for="systolic-no">No</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="systolic-unsure" name="systolic_bp" value="Not sure">
+                        <label for="systolic-unsure">Not sure</label>
+                    </div>
+                </div>
+                <div class="error-message" id="systolic-bp-error">Please select an option</div>
+            </div>
+            
+            <div class="form-group">
+                <label>Have you been diagnosed with high cholesterol?</label>
+                <div class="radio-group" id="cholesterol-group">
+                    <div class="radio-option">
+                        <input type="radio" id="cholesterol-yes" name="cholesterol" value="Yes" required>
+                        <label for="cholesterol-yes">Yes</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="cholesterol-no" name="cholesterol" value="No">
+                        <label for="cholesterol-no">No</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="cholesterol-unsure" name="cholesterol" value="Not sure">
+                        <label for="cholesterol-unsure">Not sure</label>
+                    </div>
+                </div>
+                <div class="error-message" id="cholesterol-error">Please select an option</div>
+            </div>
+            
+            <div class="form-group">
+                <label>Have you ever experienced chest pain (angina)?</label>
+                <div class="radio-group" id="angina-group">
+                    <div class="radio-option">
+                        <input type="radio" id="angina-yes" name="angina" value="Yes" required>
+                        <label for="angina-yes">Yes</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="angina-no" name="angina" value="No">
+                        <label for="angina-no">No</label>
+                    </div>
+                </div>
+                <div class="error-message" id="angina-error">Please select an option</div>
+            </div>
+            
+            <div class="form-group">
+                <label>Have you ever been diagnosed with cardiovascular disease (CVD)?</label>
+                <div class="radio-group" id="cvd-group">
+                    <div class="radio-option">
+                        <input type="radio" id="cvd-yes" name="cvd" value="Yes" required>
+                        <label for="cvd-yes">Yes</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="cvd-no" name="cvd" value="No">
+                        <label for="cvd-no">No</label>
+                    </div>
+                </div>
+                <div class="error-message" id="cvd-error">Please select an option</div>
+            </div>
+            
+            <!-- New questions added here -->
+            <div class="form-group">
+                <label>Have you ever been diagnosed with coronary heart disease (CHD)?</label>
+                <div class="radio-group" id="prevchd-group">
+                    <div class="radio-option">
+                        <input type="radio" id="prevchd-yes" name="prevchd" value="Yes" required>
+                        <label for="prevchd-yes">Yes</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="prevchd-no" name="prevchd" value="No">
+                        <label for="prevchd-no">No</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="prevchd-unsure" name="prevchd" value="Not sure">
+                        <label for="prevchd-unsure">Not sure</label>
+                    </div>
+                </div>
+                <div class="error-message" id="prevchd-error">Please select an option</div>
+            </div>
+            
+            <div class="form-group">
+                <label>Have you ever had a heart attack (Myocardial Infarction)?</label>
+                <div class="radio-group" id="prevmi-group">
+                    <div class="radio-option">
+                        <input type="radio" id="prevmi-yes" name="prevmi" value="Yes" required>
+                        <label for="prevmi-yes">Yes</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="prevmi-no" name="prevmi" value="No">
+                        <label for="prevmi-no">No</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="prevmi-unsure" name="prevmi" value="Not sure">
+                        <label for="prevmi-unsure">Not sure</label>
+                    </div>
+                </div>
+                <div class="error-message" id="prevmi-error">Please select an option</div>
+            </div>
+            
+            <div class="form-group">
+                <label>Have you ever had a stroke?</label>
+                <div class="radio-group" id="prevstrk-group">
+                    <div class="radio-option">
+                        <input type="radio" id="prevstrk-yes" name="prevstrk" value="Yes" required>
+                        <label for="prevstrk-yes">Yes</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="prevstrk-no" name="prevstrk" value="No">
+                        <label for="prevstrk-no">No</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="prevstrk-unsure" name="prevstrk" value="Not sure">
+                        <label for="prevstrk-unsure">Not sure</label>
+                    </div>
+                </div>
+                <div class="error-message" id="prevstrk-error">Please select an option</div>
+            </div>
+            
+            <div class="form-group">
+                <label>Have you ever been told by a doctor that you have high blood pressure (Hypertension)?</label>
+                <div class="radio-group" id="prevhyp-group">
+                    <div class="radio-option">
+                        <input type="radio" id="prevhyp-yes" name="prevhyp" value="Yes" required>
+                        <label for="prevhyp-yes">Yes</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="prevhyp-no" name="prevhyp" value="No">
+                        <label for="prevhyp-no">No</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="prevhyp-unsure" name="prevhyp" value="Not sure">
+                        <label for="prevhyp-unsure">Not sure</label>
+                    </div>
+                </div>
+                <div class="error-message" id="prevhyp-error">Please select an option</div>
+            </div>
+            
+            <div class="button-group">
+                <button type="button" class="back-btn" id="back-btn">Back</button>
+                <button type="button" class="next-btn" id="next-btn">Next</button>
+            </div>
+        </form>
+    </div>
+    
+    <footer style="text-align: center; padding: 15px; background-color: #f8f9fa; color: #6c757d; font-size: 14px; margin-top: 20px;">
+        <p>&copy; 2025 Heart Health Assistant. All rights reserved.</p>
+        <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </footer>
+<script>
+  document.getElementById("next-btn").addEventListener("click", function () {
+    // اقرأ بيانات الصفحة الأولى
+    const surveyPage1Data = JSON.parse(localStorage.getItem("surveyPage1Data")) || {};
+
+    // اقرأ بيانات الصفحة الثانية
+    const diabetes = document.querySelector('input[name="diabetes"]:checked')?.value === "Yes";
+    const bpMeds = document.querySelector('input[name="bp_meds"]:checked')?.value === "Yes";
+    const heartRate = parseInt(document.getElementById("heart-rate")?.value || 0);
+    const glucose = parseFloat(document.getElementById("glucose-level")?.value || 0);
+    const cholesterol = document.querySelector('input[name="cholesterol"]:checked')?.value === "Yes" ? 250 : 200; // مثال لتقدير القيمة
+
+    const medicalHistoryData = {
+      ...surveyPage1Data,
+      diabetes,
+      bpMeds,
+      heartRate,
+      glucose,
+      cholesterol
+    };
+
+    localStorage.setItem("medicalHistoryData", JSON.stringify(medicalHistoryData));
+    window.location.href = "survey3.html";
+  });
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Assistant Chatbot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00b894;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+        }
+        .navbar-brand {
+            color: var(--primary-color) !important;
+            font-weight: bold;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .navbar-brand i {
+            font-size: 1.8rem;
+            margin-right: 10px;
+        }
+        .navbar-nav .nav-link {
+            font-size: 18px;
+            margin-left: 15px;
+            color: black;
+            font-weight: bold;
+            transition: color 0.3s, transform 0.3s;
+        }
+        .navbar-nav .nav-link:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #f8f9fa;
+            padding: 30px 20px;
+            border-right: 1px solid #e0e0e0;
+        }
+        .sidebar h4 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        .sidebar .nav-item {
+            margin-bottom: 15px;
+        }
+        .sidebar .nav-link {
+            color: #555;
+            border-radius: 5px;
+            padding: 8px 12px;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background-color: #f5f5f5;
+        }
+        .chat-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            height: 60vh;
+            padding: 20px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .chat-controls {
+            display: flex;
+            gap: 10px;
+        }
+        .chat-controls input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 30px;
+            border: 1px solid #ddd;
+        }
+        .chat-controls button {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <i class="fas fa-heartbeat"></i> Health Monitor
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="user interface project.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="chat bot.html">Chatbot</a></li>
+                <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="contact us.html">Contact Us</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="main-container">
+    <nav class="sidebar">
+        <h4>Health Assistant</h4>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link active" href="#">Basic symptoms only</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Doctor Referral</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Minor concerns only</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Real-time solutions</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Immediate advice</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">24/7 availability</a></li>
+            <li class="nav-item"><a class="nav-link" href="conultation.html">Doctor Consultation</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <div class="chat-container" id="chat-container"></div>
+        <div class="chat-controls">
+            <input type="text" id="user-input" placeholder="Enter new symptoms...">
+            <button class="btn btn-primary" id="send-btn"><i class="fas fa-paper-plane"></i></button>
+            <button class="btn btn-outline-secondary" id="voice-btn"><i class="fas fa-microphone"></i></button>
+            <button class="btn btn-outline-secondary" id="upload-btn"><i class="fas fa-paperclip"></i></button>
+        </div>
+    </main>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#send-btn").click(function () {
+            sendMessage();
+        });
+
+        $("#voice-btn").click(function () {
+            alert("Voice input is under development. Stay tuned!");
+        });
+
+        $("#user-input").keypress(function (event) {
+            if (event.which === 13) {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            let userInput = $("#user-input").val().trim();
+            if (userInput === "") return;
+
+            $("#chat-container").append(`
+                <div class="d-flex justify-content-end mb-3">
+                    <div class="bg-primary text-white p-3 rounded-3" style="max-width: 70%;">
+                        ${userInput}
+                    </div>
+                </div>
+            `);
+            $("#user-input").val("");
+            $("#chat-container").scrollTop($("#chat-container")[0].scrollHeight);
+
+            // AJAX request
+            $.ajax({
+                url: "https://localhost:7047/api/ChatBot/generate",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ prompt: userInput }),
+                success: function (response) {
+                    let botResponse = "";
+
+                    try {
+                        const parsed = typeof response === "string" ? JSON.parse(response) : response;
+                        botResponse = parsed?.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't understand that.";
+                    } catch {
+                        botResponse = "Unexpected response from server.";
+                    }
+
+                    $("#chat-container").append(`
+                        <div class="d-flex justify-content-start mb-3">
+                            <div class="bg-light p-3 rounded-3" style="max-width: 70%;">
+                                ${botResponse}
+                            </div>
+                        </div>
+                    `);
+                    $("#chat-container").scrollTop($("#chat-container")[0].scrollHeight);
+                },
+                error: function () {
+                    $("#chat-container").append(`
+                        <div class="d-flex justify-content-start mb-3">
+                            <div class="bg-danger text-white p-3 rounded-3" style="max-width: 70%;">
+                                Something went wrong. Please try again later.
+                            </div>
+                        </div>
+                    `);
+                    $("#chat-container").scrollTop($("#chat-container")[0].scrollHeight);
+                }
+            });
+        }
+    });
+</script>
+
+
+</body>
+</html>

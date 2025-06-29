@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heart Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .navbar {
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 15px 0;
+    }
+
+    .navbar-nav .nav-link {
+      font-size: 18px;
+      margin-left: 15px;
+      transition: color 0.3s, transform 0.3s;
+      color: black;
+      font-weight: bold; /* Made all nav links bold */
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: #00b894;
+      transform: scale(1.1);
+    }
+
+    .container-content {
+      max-width: 900px;
+      margin: auto;
+      padding: 40px 0;
+    }
+
+    .card {
+      margin-bottom: 20px;
+      border: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, background-color 0.3s;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+      background-color: #ffffffdd;
+    }
+
+    .card h5 i {
+      color: #00b894;
+      margin-right: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background-color: #f8f9fa;
+      color: #6c757d;
+      font-size: 14px;
+      margin-top: 20px;
+    }
+    
+    .navbar-brand {
+      color: #00b894 !important;
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+    
+    .navbar-brand i {
+      font-size: 1.8rem;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    
+    /* Custom container for navbar to match width */
+    .navbar-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 0 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="navbar-container d-flex justify-content-between">
+      <a class="navbar-brand fw-bold" href="#">
+        <i class="fas fa-heartbeat"></i> Health Monitor
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto"> <!-- ms-auto pushes items to right -->
+          <li class="nav-item"><a class="nav-link" href="user interface project.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="chat bot.html">Chatbot</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact us.html">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-content">
+
+    <a href="frequent question.html" style="text-decoration: none; color: inherit;">
+      <div class="card p-3">
+        <h5 class="fw-bold"><i class="fas fa-question-circle"></i> Frequently Asked Questions</h5>
+        <p><strong>What is heart disease?</strong> Heart disease refers to various types of conditions that affect heart function...</p>
+        <p><strong>How does AI predict heart conditions?</strong> Our AI analyzes data patterns from health metrics...</p>
+        <p><strong>What features does the website offer?</strong> The website provides real-time health advice...</p>
+      </div>
+    </a>
+
+    <a href="user manal.html" style="text-decoration: none; color: inherit;">
+      <div class="card p-3">
+        <h5 class="fw-bold"><i class="fas fa-book-open"></i> User Manual</h5>
+        <ul>
+          <li>Sign up and create your profile with accurate health information.</li>
+          <li>Sync your smartwatch to track real-time health metrics.</li>
+          <li>Access AI-driven health predictions and tips from your dashboard.</li>
+          <li>Schedule and manage consultations with health professionals.</li>
+        </ul>
+      </div>
+    </a>
+
+    <a href="support.html" style="text-decoration: none; color: inherit;">
+      <div class="card p-3">
+        <h5 class="fw-bold"><i class="fas fa-headset"></i> Technical Support</h5>
+        <p>Email: <a href="mailto:support@hearthealthassistant.com">support@hearthealthassistant.com</a></p>
+        <p>Phone: +1 (800) 555-0199</p>
+      </div>
+    </a>
+
+    <a href="troubleshooting.html" style="text-decoration: none; color: inherit;">
+      <div class="card p-3">
+        <h5 class="fw-bold"><i class="fas fa-tools"></i> Troubleshooting Tips</h5>
+        <ul>
+          <li>Ensure your smartwatch is properly connected via Bluetooth for data syncing.</li>
+          <li>Clear browser cache if you encounter login issues.</li>
+          <li>Update your app to the latest version for optimal performance.</li>
+        </ul>
+      </div>
+    </a>
+
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Heart Health Assistant. All rights reserved.</p>
+    <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,506 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Health Monitor - Survey</title> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"> 
+    <style> 
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            background-color: #ffffff; 
+            color: #333; 
+        } 
+         
+        .navbar { 
+            background-color: white; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+            padding: 15px 0; 
+        } 
+ 
+        .navbar-nav .nav-link { 
+            font-size: 18px; 
+            margin-left: 15px; 
+            transition: color 0.3s, transform 0.3s; 
+            color: black; 
+            font-weight: bold; 
+        } 
+ 
+        .navbar-nav .nav-link:hover { 
+            color: #00b894; 
+            transform: scale(1.1); 
+        } 
+         
+        .navbar-brand { 
+            color: #00b894 !important; 
+            font-weight: bold; 
+            font-size: 1.5rem; 
+        } 
+         
+        .navbar-brand i { 
+            font-size: 1.8rem; 
+            margin-right: 10px; 
+            vertical-align: middle; 
+        } 
+         
+        /* Custom container for navbar to match width */ 
+        .navbar-container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            width: 100%; 
+            padding: 0 15px; 
+        } 
+         
+        .survey-container { 
+            max-width: 800px; 
+            margin: 30px auto; 
+            padding: 30px; 
+            background-color: white; 
+            border-radius: 10px; 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); 
+        } 
+         
+        h1 { 
+            color: #00b894; 
+            text-align: center; 
+            margin-bottom: 30px; 
+        } 
+         
+        .survey-intro { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            color: #666; 
+            font-size: 18px; 
+        } 
+         
+        .form-group { 
+            margin-bottom: 25px; 
+        } 
+         
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            color: #444; 
+        } 
+         
+        input[type="text"], 
+        input[type="number"], 
+        select { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #ddd; 
+            border-radius: 6px; 
+            font-size: 16px; 
+            transition: border-color 0.3s; 
+        } 
+         
+        input[type="text"]:focus, 
+        input[type="number"]:focus, 
+        select:focus { 
+            border-color: #00b894; 
+            outline: none; 
+        } 
+         
+        .radio-group { 
+            display: flex; 
+            gap: 20px; 
+        } 
+         
+        .radio-option { 
+            display: flex; 
+            align-items: center; 
+        } 
+         
+        .radio-option input { 
+            margin-right: 8px; 
+        } 
+         
+        .conditional-question { 
+            margin-top: 15px; 
+            margin-left: 20px; 
+            padding-left: 20px; 
+            border-left: 3px solid #eee; 
+            display: none; 
+        } 
+         
+        .button-group { 
+            display: flex; 
+            justify-content: flex-end; 
+            margin-top: 40px; 
+        } 
+         
+        button { 
+            background-color: #00b894; 
+            color: white; 
+            border: none; 
+            padding: 12px 25px; 
+            font-size: 16px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            transition: background-color 0.3s; 
+        } 
+         
+        button:hover { 
+            background-color: #00a884; 
+        } 
+         
+        .next-btn { 
+            background-color: #0984e3; 
+        } 
+         
+        .next-btn:hover { 
+            background-color: #0767b1; 
+        } 
+         
+        .progress-bar { 
+            height: 6px; 
+            background-color: #e0e0e0; 
+            border-radius: 3px; 
+            margin-bottom: 30px; 
+            overflow: hidden; 
+        } 
+         
+        .progress { 
+            height: 100%; 
+            background-color: #00b894; 
+            width: 0%; 
+            transition: width 0.3s; 
+        } 
+         
+        .error-message { 
+            color: #e74c3c; 
+            font-size: 14px; 
+            margin-top: 5px; 
+            display: none; 
+        } 
+         
+        .error-border { 
+            border-color: #e74c3c !important; 
+        } 
+        /* Profile picture section */
+        .profile-picture-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .profile-picture-container {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--primary-color);
+            position: relative;
+            background-color: #f1f1f1;
+        }
+        
+        .profile-picture {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .upload-btn {
+            margin-top: 10px;
+            background-color: #00b894; 
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+        
+        .upload-btn:hover {
+            background-color: #00b894; 
+        }
+    </style> 
+</head> 
+<body> 
+    <nav class="navbar navbar-expand-lg navbar-light"> 
+        <div class="navbar-container d-flex justify-content-between"> 
+            <a class="navbar-brand fw-bold" href="#"> 
+                <i class="fas fa-heartbeat"></i> Health Monitor 
+            </a> 
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"> 
+                <span class="navbar-toggler-icon"></span> 
+            </button> 
+            <div class="collapse navbar-collapse" id="navbarNav"> 
+                <ul class="navbar-nav ms-auto"> 
+                    <li class="nav-item"><a class="nav-link" href="user interface project.html">Home</a></li> 
+                    <li class="nav-item"><a class="nav-link" href="chat bot.html">Chatbot</a></li> 
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li> 
+                    <li class="nav-item"><a class="nav-link" href="contact us.html">Contact Us</a></li> 
+                </ul> 
+            </div> 
+        </div> 
+    </nav> 
+     
+    <div class="survey-container"> 
+        <div class="progress-bar"> 
+            <div class="progress" id="progress"></div> 
+        </div> 
+         
+        <h1>General Health Information</h1> 
+        <p class="survey-intro">Please help us understand your health better by answering these questions.</p> 
+         
+        <form id="healthSurvey"> 
+               <div class="profile-picture-section"> 
+            <div class="profile-picture-container"> 
+                <img id="profileImage" src="https://via.placeholder.com/150" alt="Doctor Profile Picture" class="profile-picture"> 
+            </div> 
+            <button type="button" class="upload-btn" id="uploadBtn"> 
+                <i class="fas fa-camera"></i> Upload Profile Picture 
+            </button> 
+          <input type="file" id="profileUpload" name="Image.File" accept="image/*" style="display: none;"> 
+               </div>
+            <div class="form-group"> 
+                <label for="age">What is your age?</label> 
+                <input type="number" id="age" name="age" min="1" max="120" required> 
+                <div class="error-message" id="age-error">Please enter your age</div> 
+            </div> 
+             
+            <div class="form-group"> 
+                <label>What is your gender?</label> 
+                <div class="radio-group"> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="male" name="gender" value="Male" required> 
+                        <label for="male">Male</label> 
+                    </div> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="female" name="gender" value="Female"> 
+                        <label for="female">Female</label> 
+                    </div> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="other" name="gender" value="Other"> 
+                        <label for="other">Other</label> 
+                    </div> 
+                </div> 
+                <div class="error-message" id="gender-error">Please select your gender</div> 
+            </div> 
+             
+            <div class="form-group"> 
+                <label>Do you smoke cigarettes?</label> 
+                <div class="radio-group"> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="smoke-yes" name="smoke" value="Yes" required> 
+                        <label for="smoke-yes">Yes</label> 
+                    </div> 
+                    <div class="radio-option"> 
+                        <input type="radio" id="smoke-no" name="smoke" value="No"> 
+                        <label for="smoke-no">No</label> 
+                    </div> 
+                </div> 
+                <div class="error-message" id="smoke-error">Please select an option</div> 
+                 
+                <div class="conditional-question" id="smoking-frequency"> 
+                    <label for="smoking-days">If yes, how many days per week do you smoke?</label> 
+                    <input type="number" id="smoking-days" name="smoking_days" min="1" max="7"> 
+                    <div class="error-message" id="smoking-days-error">Please enter number of days</div> 
+                </div> 
+            </div> 
+             
+            <div class="form-group"> 
+                <label for="weight">What is your current weight (in kg)?</label> 
+                <input type="number" id="weight" name="weight" min="20" max="300" step="0.1" required> 
+                <div class="error-message" id="weight-error">Please enter your weight</div> 
+            </div> 
+             
+            <div class="form-group"> 
+                <label for="height">What is your current height (in cm)?</label> 
+                <input type="number" id="height" name="height" min="100" max="250" required> 
+                <div class="error-message" id="height-error">Please enter your height</div> 
+            </div> 
+             
+            <div class="form-group"> 
+                <label for="education">What is your educational level?</label> 
+                <select id="education" name="education" required> 
+                    <option value="" disabled selected>Select your education</option> 
+                    <option value="Primary">Primary</option> 
+                    <option value="Secondary">Secondary</option> 
+                    <option value="College">College</option> 
+                    <option value="Graduate">Graduate</option> 
+                </select> 
+                <div class="error-message" id="education-error">Please select your education level</div> 
+            </div> 
+             
+            <div class="button-group"> 
+                <button type="button" class="next-btn" id="next-btn">Next</button> 
+            </div> 
+        </form> 
+    </div> 
+     
+    <footer style="text-align: center; padding: 15px; background-color: #f8f9fa; color: #6c757d; font-size: 14px; margin-top: 20px;"> 
+        <p>&copy; 2025 Heart Health Assistant. All rights reserved.</p> 
+        <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p> 
+    </footer> 
+     
+<script>
+    // Show/hide conditional question based on smoking answer
+    document.querySelectorAll('input[name="smoke"]').forEach(radio => {
+        radio.addEventListener('change', function () {
+            const smokingFrequency = document.getElementById('smoking-frequency');
+            smokingFrequency.style.display = (this.value === 'Yes') ? 'block' : 'none';
+        });
+    });
+
+    // ✅ رفع الصورة وتحديث المعاينة + تخزينها
+    document.getElementById('uploadBtn').addEventListener('click', function () {
+        document.getElementById('profileUpload').click();
+    });
+
+    document.getElementById('profileUpload').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('profileImage').src = e.target.result;
+                localStorage.setItem('uploadedImageBase64', e.target.result); // 👈 تخزين الصورة base64
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    const form = document.getElementById('healthSurvey');
+    const inputs = form.querySelectorAll('input, select');
+    const progressBar = document.getElementById('progress');
+
+    function updateProgress() {
+        let filled = 0;
+        inputs.forEach(input => {
+            if (input.type === 'radio') {
+                if (input.checked) filled++;
+            } else if (input.value) {
+                filled++;
+            }
+        });
+        const progress = (filled / inputs.length) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    inputs.forEach(input => {
+        input.addEventListener('input', updateProgress);
+        if (input.type === 'radio') {
+            input.addEventListener('change', updateProgress);
+        }
+    });
+
+    function validateForm() {
+        let isValid = true;
+
+        const age = document.getElementById('age');
+        const ageError = document.getElementById('age-error');
+        if (!age.value) {
+            age.classList.add('error-border');
+            ageError.style.display = 'block';
+            isValid = false;
+        } else {
+            age.classList.remove('error-border');
+            ageError.style.display = 'none';
+        }
+
+        const genderSelected = document.querySelector('input[name="gender"]:checked');
+        const genderError = document.getElementById('gender-error');
+        if (!genderSelected) {
+            genderError.style.display = 'block';
+            isValid = false;
+        } else {
+            genderError.style.display = 'none';
+        }
+
+        const smokeSelected = document.querySelector('input[name="smoke"]:checked');
+        const smokeError = document.getElementById('smoke-error');
+        if (!smokeSelected) {
+            smokeError.style.display = 'block';
+            isValid = false;
+        } else {
+            smokeError.style.display = 'none';
+
+            if (smokeSelected.value === 'Yes') {
+                const smokingDays = document.getElementById('smoking-days');
+                const smokingDaysError = document.getElementById('smoking-days-error');
+                if (!smokingDays.value) {
+                    smokingDays.classList.add('error-border');
+                    smokingDaysError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    smokingDays.classList.remove('error-border');
+                    smokingDaysError.style.display = 'none';
+                }
+            }
+        }
+
+        const weight = document.getElementById('weight');
+        const weightError = document.getElementById('weight-error');
+        if (!weight.value) {
+            weight.classList.add('error-border');
+            weightError.style.display = 'block';
+            isValid = false;
+        } else {
+            weight.classList.remove('error-border');
+            weightError.style.display = 'none';
+        }
+
+        const height = document.getElementById('height');
+        const heightError = document.getElementById('height-error');
+        if (!height.value) {
+            height.classList.add('error-border');
+            heightError.style.display = 'block';
+            isValid = false;
+        } else {
+            height.classList.remove('error-border');
+            heightError.style.display = 'none';
+        }
+
+        const education = document.getElementById('education');
+        const educationError = document.getElementById('education-error');
+        if (!education.value) {
+            education.classList.add('error-border');
+            educationError.style.display = 'block';
+            isValid = false;
+        } else {
+            education.classList.remove('error-border');
+            educationError.style.display = 'none';
+        }
+
+        return isValid;
+    }
+
+    document.getElementById('next-btn').addEventListener('click', function () {
+        if (validateForm()) {
+            const age = parseInt(document.getElementById('age').value);
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const smokes = document.querySelector('input[name="smoke"]:checked').value === "Yes";
+            const cigarettesPerDay = smokes ? parseInt(document.getElementById('smoking-days').value) || 0 : 0;
+            const weightKg = parseFloat(document.getElementById('weight').value);
+            const heightCm = parseFloat(document.getElementById('height').value);
+            const education = document.getElementById('education').value;
+
+            const imageBase64 = localStorage.getItem('uploadedImageBase64'); // ✅ قراءة الصورة
+
+            const surveyPage1Data = {
+                gender,
+                age,
+                smokes,
+                cigarettesPerDay,
+                weightKg,
+                heightCm,
+                education,
+                imageBase64 // ✅ إضافة الصورة ضمن البيانات
+            };
+
+            localStorage.setItem('surveyPage1Data', JSON.stringify(surveyPage1Data));
+            window.location.href = 'survey2.html';
+        } else {
+            const firstError = document.querySelector('.error-message[style="display: block;"]');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    });
+</script>
+
+</body> 
+</html> 
